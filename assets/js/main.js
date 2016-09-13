@@ -152,21 +152,16 @@
 
 				};
 
-				$window
-					.on('load resize', function() {
-						$window.trigger('scroll');
-					});
-
+				$window.on('load resize', function() {
+					$window.trigger('scroll');
+				});
 			}
 
 		// Spotlights.
 			var $spotlights = $('.spotlight');
 
-			$spotlights
-				._parallax()
-				.each(function() {
-
-					var $this = $(this),
+			$spotlights._parallax().each(function() {
+				var $this = $(this),
 						on, off;
 
 					on = function() {

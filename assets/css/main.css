@@ -3912,11 +3912,11 @@
 
 	@media screen and (max-width: 480px) {
 
-		/* Basic */
+		/* Basic
 
 			html, body {
 				min-width: 320px;
-			}
+			}*/
 
 			body, input, select, textarea {
 				font-size: 12pt;

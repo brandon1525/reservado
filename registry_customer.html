@@ -1,117 +1,66 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>Reservado.com</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-	</head>
-	<body class="landing">
-		<div id="page-wrapper">
-			<!-- Header -->
-				<header id="header">
-					<h1 id="logo"><a href="index.html"><img src="images/icon_app.png" alt="" style="width: 20px;"/>Reservado.com</a></h1>
-					<nav id="nav">
-						<ul>
-							<li>
-								<a href="#" class="button special">Registro</a>
-								<ul>
-									<li><a href="#">Clientes</a></li>
-									<li><a href="#">Establecimientos</a></li>
-								</ul>
-							</li>
-							<li>
-								<a href="login.html" class="button special">Inicio sesión</a>
-							</li>
-						</ul>
-					</nav>
-				</header>
-
-				<section id="login" class="wrapper style1 special fade-up">
-					<div class="container">
-						<header class="major">
-							<h2>Registro clientes</h2>
-						</header>
-							<div class="row uniform 50%">
-								<div class="4u 12u$(small)">
-									<input type="text" id="user_name" placeholder="Nombre(s)" />
-								</div>
-                <div class="4u 12u$(small)">
-									<input type="text" id="user_last_1" placeholder="Apellido Parterno " />
-								</div>
-                <div class="4u 12u$(small)">
-									<input type="text" id="user_last_2" placeholder="Apellido Materno" />
-								</div>
-              </div>
-              <div class="row uniform 50%">
-                <div class="3u 5u$(small)">
-                  <input type="radio" id="sex_fem" name="sex_user" checked>
-                  <label for="sex_fem">Femenino</label>
-                </div>
-                <div class="3u 5u$(small)">
-                  <input type="radio" id="sex_mas" name="sex_user">
-                  <label for="sex_mas">Masculino</label>
-                </div>
-								<div class="3u 12u$(small)">
-                  <input type="text" id="user_phone" placeholder="Teléfono">
-                </div>
-                <div class="3u 12u$(small)">
-									<input type="text" id="user_years" placeholder="Edad" />
-								</div>
-              </div>
-              <div class="row uniform 50%">
-                <div class="4u 12u$(small)">
-									<input type="email" id="email_user" placeholder="Correo electrónico" />
-								</div>
-                <div class="4u 12u$(small)">
-									<input type="text" id="password_user" placeholder="Password" />
-								</div>
-                <div class="4u 12u$(small)">
-									<input type="text" id="password_user" placeholder="Password" />
-								</div>
-              </div>
-              <div class="row uniform 50%">
-                <div class="3u 12u$(small)"></div>
-								<div class="6u 12u$(small)">
-									<a class="button special fit" id="registry_customer">Registrar</a></li>
-								</div>
-							</div>
-					</div>
-				</section>
-
-			<!-- Footer -->
-				<footer id="footer">
-					<ul class="icons">
-						<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
-						<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
-						<li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
-					</ul>
-					<ul class="copyright">
-						<li>&copy; Soluciones Inteligentes. All rights reserved.</li><li>Design: <a href="http://brbussines.xyz">Soluciones Inteligentes</a></li>
-					</ul>
-				</footer>
-
+<div class="container">
+	<h2>Registro clientes</h2>
+	<div class="row">
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="user_name" placeholder="Nombre(s)" />
+			</div>
 		</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery-3.1.0.min.js"></script>
-			<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-			<!--<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>-->
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-
-		<!--	<script src="assets/js/main.js"></script>-->
-			<script src="assets/js/registry_customer.js"></script>
-
-	</body>
-</html>
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="user_last_1" placeholder="Apellido Parterno " />
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="user_last_2" placeholder="Apellido Materno" />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3 col-xs-12">
+			<div class="form-group">
+				<input type="radio" id="sex_fem" name="sex_user" checked>
+				<label for="sex_fem">Femenino</label>
+			</div>
+		</div>
+		<div class="col-md-3 col-xs-12">
+			<div class="form-group">
+				<input type="radio" id="sex_mas" name="sex_user">
+				<label for="sex_mas">Masculino</label>
+			</div>
+		</div>
+		<div class="col-md-3 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="user_phone" placeholder="Teléfono">
+			</div>
+		</div>
+		<div class="col-md-3 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="user_years" placeholder="Edad" />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="email" id="email_user" placeholder="Correo electrónico" />
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="password_user" placeholder="Password" />
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-12">
+			<div class="form-group">
+				<input class="form-control" type="text" id="password_user" placeholder="Password" />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-offset-4 col-md-4 col-xs-12">
+			<button class="btn btn-block btn-black" id="registry_customer">Registrar</button>
+		</div>
+	</div>
+</div>

@@ -14,6 +14,7 @@ $(document).ready(function(){
         type_user:  "cliente",
         user: "apocono@gmail.com",
         password: "pene"}
+
     }).done(function(json){
       console.log(json);
     });

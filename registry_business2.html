@@ -1,0 +1,138 @@
+<div class="container">
+	<h2 class="text-center">Registro establecimiento</h2>
+	<div class="row">
+		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+			<div class="form-horizontal">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="name">Nombre del establecimiento</label>
+					<input class="form-control input-lg" type="text" id="name" placeholder="Nombre del negocio" />
+					<span class="fa fa-align-justify form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="description">Descripción</label>
+					<textarea class="form-control input-lg" type="text" id="description" placeholder="Breve descripción del negocio" style="max-width: 100%;"></textarea>
+				</div>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="total_people">Total de personas para reservaciones</label>
+					<input class="form-control input-lg" type="number" id="total_people" placeholder="Número de personas" />
+					<span class="fa fa-users form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="type">Tipo de negocio</label>
+					<select class="form-control selectpicker" id="type" data-style="btn-lg">
+						<option data-icon="fa fa-glass">Antro</option>
+						<option data-icon="fa fa-beer">Bar</option>
+						<option data-icon="fa fa-coffee">Cafe</option>
+						<option data-icon="fa fa-cutlery">Restaurant</option>
+						<option data-icon="fa fa-building">Otro</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-horizontal" style="display: none;">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="other_type">Otro tipo de negocio</label>
+					<input class="form-control input-lg" type="text" id="other_type" placeholder="Tipo de negocio" />
+					<span class="fa fa-building form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+			<button class="btn btn-block btn-black" id="registry_business2">Registrar</button>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		$('#type').selectpicker();
+		$('.form-group input').keyup(function(){
+			$(this).closest('.form-group').removeClass('has-error');
+		});
+		$('#type').on('changed.bs.select	', function (e) {
+			var valor = $(this).find('option:selected').text();
+			if(valor=="Otro"){
+				$('#other_type').closest('.form-horizontal').show();
+			}else{
+				$('#other_type').closest('.form-horizontal').hide();
+			}
+		});
+		$('#registry_business2').click(function(){
+			var name = $('#name').val();
+			var description = $('#description').val();
+			var total_people = parseInt($('#total_people').val());
+			var type = $('#type').find('option:selected').text();
+			if($('#type').find('option:selected').text()=="Otro"){
+				type = $('#other_type').val();
+			}
+			var owner = JSON.parse(localStorage.getItem('user_data')).id;
+			if(validate_form()){
+				$.when(registry_business2(name, description, total_people, type, owner)).done(function(json){
+					if(json.success){
+						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Negocio creado con éxito').show().fadeOut( 3000);
+						localStorage.setItem("business_data", JSON.stringify(json.business_data));
+						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/";
+					}else{
+						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
+					}
+				});
+			}
+		});
+	});
+	function validate_form(){
+		var validate = true;
+		if($('#name').val()=="" || $('#name').val().replace(' ','')==""){
+			$('#name').closest('.form-group').addClass('has-error');
+			$('#name').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#description').val()=="" || $('#description').val().replace(' ','')==""){
+			$('#description').closest('.form-group').addClass('has-error');
+			$('#description').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#total_people').val()=="" || $('#total_people').val().replace(' ','')==""){
+			$('#total_people').closest('.form-group').addClass('has-error');
+			$('#total_people').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if(!(Math.floor($('#total_people').val()) == $('#total_people').val() && $.isNumeric($('#total_people').val()))){
+			$('#total_people').closest('.form-group').addClass('has-error');
+			$('#total_people').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Solo numeros').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#type').find('option:selected').text()=="Otro"){
+			if($('#other_type').val()=="" || $('#other_type').val().replace(' ','')==""){
+				$('#other_type').closest('.form-group').addClass('has-error');
+				$('#other_type').focus();
+				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+				validate=false;
+				return false;
+			}
+		}
+		return validate;
+	}
+	function registry_business2(name, description, total_people, type, owner){
+		return $.ajax({
+			url: "http://localhost:3000/place",
+			method: "POST",
+			data: {
+				name: name, description: description, total_people: total_people, type: type, owner: owner
+			}
+		});
+	}
+</script>

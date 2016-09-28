@@ -1147,7 +1147,7 @@ article {
 .navbar-toggle {
   background: #000;
 }
-.dropdown-menu > ul {
+.menu-up > ul {
   list-style: none;
   padding: 15px;
   margin-left: auto;
@@ -1162,7 +1162,7 @@ article {
 .nav .open > a:focus {
   background-color: transparent;
 }
-#top-bar .dropdown-menu > ul > li > a {
+#top-bar .menu-up > ul > li > a {
   display: block;
   font-size: 13px;
   font-weight: 400;

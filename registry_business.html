@@ -1,4 +1,3 @@
-
 <div class="container">
 	<h2 class="text-center">Registro establecimiento</h2>
 	<div class="row">
@@ -10,8 +9,6 @@
 					<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="user_last_1">Apellido Parterno</label>
@@ -19,8 +16,6 @@
 					<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="user_last_2">Apellido Materno</label>
@@ -28,10 +23,16 @@
 					<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
+			<div class="form-horizontal">
+				<div class="form-group has-feedback">
+					<label class="control-label" for="user_phone">Teléfono</label>
+					<input class="form-control input-lg" type="text" id="user_phone" placeholder="Teléfono" />
+					<span class="fa fa-mobile form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="1u 12u$(small)"></div>
 		<div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group">
@@ -52,13 +53,9 @@
 				<div class="form-group has-feedback">
 					<label class="control-label" for="user_years">Edad</label>
 					<input class="form-control input-lg" type="text" id="user_years" placeholder="Edad" />
-					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+					<i class="fa fa-calendar form-control-feedback" aria-hidden="true"></i>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="email_user">Email</label>
@@ -66,29 +63,152 @@
 					<span class="fa fa-envelope form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="password_user">Contraseña</label>
-					<input class="form-control input-lg" type="text" id="password_user" placeholder="Password" />
+					<input class="form-control input-lg" type="password" id="password_user" placeholder="Password" />
 					<span class="fa fa-lock form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="repassword_user">Repetir contraseña</label>
-					<input class="form-control input-lg" type="text" id="repassword_user" placeholder="Password" />
+					<input class="form-control input-lg" type="password" id="repassword_user" placeholder="Password" />
 					<span class="fa fa-lock form-control-feedback" aria-hidden="true"></span>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-offset-4 col-md-4 col-xs-12">
-			<button class="btn btn-block btn-black">Registrar</button>
+		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+			<button class="btn btn-block btn-black" id="registry_business">Siguiente</button>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#user_years').datetimepicker({
+			viewMode: 'years',
+			locale:'es',
+			format:'DD/MM/YYYY'
+		});
+		$('#registry_business').click(function(){
+		 var nombre = $('#user_name').val();
+		 var apellido_p = $('#user_last_1').val();
+		 var apellido_m = $('#user_last_2').val();
+		 var telefono = $('#user_phone').val();
+		 var sexo = $('#sex_fem').is(':checked')? 'Femenino' : 'Masculino';
+		 var edad = $('#user_years').val();
+		 var type_user = 1;
+		 var usuario = $('#email_user').val();
+		 var password = $('#password_user').val();
+			if(validate_form()){
+				$.when(registry_business(nombre, apellido_p, apellido_m, telefono, sexo, edad, type_user, usuario, password)).done(function(json){
+					if(json.success){
+						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Usuario creado con éxito').show().fadeOut( 3000);
+						localStorage.setItem("user_data", JSON.stringify(json.user_data));
+						$('#contenido_change').empty().load('registry_business2.html');
+					}else{
+						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
+					}
+				});
+			}
+		});
+		$('.form-group input').keyup(function(){
+			$(this).closest('.form-group').removeClass('has-error');
+		});
+		$('#sex_fem').click(function(){
+			$(this).closest('.form-group').removeClass('has-error');
+		});
+		$('#sex_mas').click(function(){
+			$(this).closest('.form-group').removeClass('has-error');
+		});
+	});
+	function validate_form() {
+		var validate = true;
+		if($('#user_name').val()=="" || $('#user_name').val().replace(' ','')==""){
+			$('#user_name').closest('.form-group').addClass('has-error');
+			$('#user_name').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#user_last_1').val()=="" || $('#user_last_1').val().replace(' ','')==""){
+			$('#user_last_1').closest('.form-group').addClass('has-error');
+			$('#user_last_1').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#user_last_2').val()=="" || $('#user_last_2').val().replace(' ','')==""){
+			$('#user_last_2').closest('.form-group').addClass('has-error');
+			$('#user_last_2').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if($('#user_phone').val()=="" || $('#user_phone').val().replace(' ','')==""){
+			$('#user_phone').closest('.form-group').addClass('has-error');
+			$('#user_phone').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate=false;
+			return false;
+		}
+		if(!$('#sex_fem').is(':checked')){
+			if(!$('#sex_mas').is(':checked')){
+				$('#sex_mas').closest('.form-group').addClass('has-error');
+				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+				validate=false;
+				return false;
+			}
+		}
+		if($('#user_years').val()=="" || $('#user_years').val().replace(' ','')==""){
+			$('#user_years').closest('.form-group').addClass('has-error');
+			$('#user_years').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate = false;
+			return false;
+		}
+		if($('#email_user').val()=="" || $('#email_user').val().replace(' ','')==""){
+			$('#email_user').closest('.form-group').addClass('has-error');
+			$('#email_user').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate = false;
+			return false;
+		}
+		if($('#password_user').val()=="" || $('#password_user').val().replace(' ','')==""){
+			$('#password_user').closest('.form-group').addClass('has-error');
+			$('#password_user').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate = false;
+			return false;
+		}
+		if($('#repassword_user').val()=="" || $('#repassword_user').val().replace(' ','')==""){
+			$('#repassword_user').closest('.form-group').addClass('has-error');
+			$('#repassword_user').focus();
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			validate = false;
+			return false;
+		}
+		if($('#repassword_user').val()!=$('#password_user').val()){
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Las contraseñas no coinciden').show().fadeOut( 3000);
+			validate = false;
+			return false;
+		}
+		return validate;
+	}
+	function registry_business(name, last_name_p, last_name_m, phone, sex, date_b, type_user, user, password){
+		date_b = date_b.split('/');
+		var year = parseInt(date_b[2]);
+		var month = parseInt(date_b[1])-1;
+		var day = parseInt(date_b[0]);
+		date_b = new Date(year, month, day, 0, 0, 0, 0);
+		return $.ajax({
+			url: "http://localhost:3000/user",
+			method: "POST",
+			data: {
+				name: name, last_name_p: last_name_p, last_name_m: last_name_m, phone: phone,
+				sex: sex, date_b: date_b, type_user: type_user, user: user, password: password}
+			});
+		}
+</script>

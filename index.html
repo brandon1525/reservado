@@ -2,70 +2,25 @@
 <html lang="es" style="min-width: 100%; position: absolute;">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Basic Page Needs
-    ================================================== -->
     <link rel="shortcut icon" href="images/icon_app.png" type="image/x-icon">
     <title>Reservado.com</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
     <!-- Mobile Specific Metas-->
-    ==================================================
     <meta name="format-detection" content="telephone=no"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <!-- Template CSS Files
-    ================================================== -->
-    <!-- Twitter Bootstrs CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Ionicons Fonts Css -->
-    <!--<link rel="stylesheet" href="css/ionicons.min.css">-->
     <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
-    <!-- animate css -->
     <link rel="stylesheet" href="css/animate.css">
-    <!-- Hero area slider css-->
     <link rel="stylesheet" href="css/slider.css">
-    <!-- owl craousel css
-    <link rel="stylesheet" href="css/owl.carousel.css">
-    <link rel="stylesheet" href="css/owl.theme.css">-->
     <link rel="stylesheet" href="css/jquery.fancybox.css">
-    <!-- template main css file -->
     <link rel="stylesheet" href="css/main.css">
-    <!-- responsive css-->
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <!-- Template Javascript Files
-    ================================================== -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="css/bootstrap-select.min.css">
-    <!-- modernizr js-->
-    <script src="js/modernizr-custom.js"></script>
-    <!-- jquery -->
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="js/bootstrap-select.min.js"></script>
-    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="js/i18n/defaults-es_CL.min.js"></script>
-
-    <!-- owl carouserl js -->
-    <script src="js/owl.carousel.min.js"></script>
-    <!-- bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
-    <!-- wow js -->
-    <script src="js/wow.min.js"></script>
-    <!-- slider js -->
-    <script src="js/slider.js"></script>
-    <script src="js/jquery.fancybox.js"></script>
-    <!-- template main js -->
-    <script src="js/main.js"></script>
   </head>
   <body style="min-width: 100%;">
-    <!--
-    ==================================================
-    Header Section Start
-    ================================================== -->
     <header id="top-bar" class="navbar-fixed-top animated-header">
     </header>
     <div style="margin-top: 72px;">
@@ -139,7 +94,9 @@
                 <p class="text-justify">Para ti que deseas pasar una noche increible, ir a comer con tu familia o amigos, ir a un café con aquella persona
     							especial tenemos el sistema de reservaciones diseñado especialmente para ti, con los establecimientos mas
     							populares de tu ciudad.</p>
-                  <a class="btn-lines btn-block light wow fadeInUp animated smooth-scroll btn btn-black animated" data-wow-delay=".9s" href="registry_customer.html" style="visibility: visible; animation-delay: 0.9s; animation-name: fadeInUp;">Registro de usuario</a>
+                  <div class="place_link">
+                    <a data-href="registry_customer.html" class="btn btn-lines btn-block btn-black">Registro de usuario</a>
+                  </div>
               </div>
             </div>
             <div class="col-md-6 col-sm-6">
@@ -165,7 +122,9 @@
                 <h3>Empieza a tomar decisiones de manera inteligente</h3>
                 <p class="text-justify">Nosotros de proporcionamos un sistema de reservaciones, donde no te preocupas de RP's y sus salarios, además de que tendrás
     							una herramienta mas de toma de decisiones, con información actual y a tu mano, basta en confiar en nosotros.</p>
-                  <a class="btn-lines btn-block light wow fadeInUp animated smooth-scroll btn btn-black animated" data-wow-delay=".9s" href="registry_business.html" style="visibility: visible; animation-delay: 0.9s; animation-name: fadeInUp;">Registra tu establecimiento</a>
+                  <div class="place_link">
+                    <a data-href="registry_business.html" class="btn-lines btn-block btn btn-black">Registra tu establecimiento</a>
+                  </div>
               </div>
             </div>
           </div>
@@ -273,7 +232,9 @@
               <div class="block section-heading">
                 <h2 class="title wow fadeInDown animated" data-wow-delay=".3s" data-wow-duration="500ms" style="visibility: visible; animation-duration: 500ms; animation-delay: 0.3s;">No esperes mas!</h2>
                 <p class="wow fadeInDown animated" data-wow-delay=".5s" data-wow-duration="500ms" style="visibility: visible; animation-duration: 500ms; animation-delay: 0.5s; color: #fff;">Si eres un establecimiento y deseas aumentar tus ganancias y quitarte un peso de encima administrando reservaciones.</p>
-                <a href="registry_business.html" class="btn btn-default btn-contact wow fadeInDown animated" data-wow-delay=".7s" data-wow-duration="500ms" style="visibility: visible; animation-duration: 500ms; animation-delay: 0.7s;">Da click aquí</a>
+                <div class="place_link">
+                  <a data-href="registry_business.html" class="btn btn-default btn-contact wow fadeInDown animated" data-wow-delay=".7s" data-wow-duration="500ms" style="visibility: visible; animation-duration: 500ms; animation-delay: 0.7s;">Da click aquí</a>
+                </div>
               </div>
             </div>
           </div>
@@ -421,9 +382,33 @@
       </div>
     </footer> <!-- /#footer -->
   </body>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="css/bootstrap-select.min.css">
+  <!-- modernizr js-->
+  <script src="js/modernizr-custom.js"></script>
+  <!-- jquery -->
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="js/bootstrap-select.min.js"></script>
+  <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+  <script src="js/i18n/defaults-es_CL.min.js"></script>
+
+  <!-- owl carouserl js -->
+  <script src="js/owl.carousel.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/moment-with-locales.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+  <!-- wow js -->
+  <script src="js/wow.min.js"></script>
+  <!-- slider js -->
+  <script src="js/slider.js"></script>
+  <script src="js/jquery.fancybox.js"></script>
+  <!-- template main js -->
+  <script src="js/main.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('#top-bar').load('navegacion.html');
+    });
+  </script>
 </html>
-<script>
-  $(document).ready(function(){
-    $('#top-bar').load('navegacion.html');
-  });
-</script>

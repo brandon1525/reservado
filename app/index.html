@@ -1,88 +1,55 @@
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="img/icon_app.png">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Reservado.com</title>
+  <!--Import Google Icon Font-->
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
-    <title>App Reservado.com</title>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<body>
+  <ul id="slide-out" class="side-nav">
+    <li>
+      <div class="userView grey darken-3">
+        <a href="#!user"><i class="medium material-icons">account_circle</i></a>
+        <a href="#!name"><span class="white-text name"></span></a>
+        <a href="#!email"><span class="white-text email"></span></a>
+      </div>
+    </li>
+    <li><a class="link_content" data-href="perfil.html"><i class="material-icons">account_circle</i> Ver perfil</a></li>
+    <li><a class="link_content" data-href="perfil.html"><i class="material-icons">event</i> Reservacion</a></li>
+    <li><a class="subheader">Establecimientos</a></li>
+    <div id="charge_places"></div>
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
-    <link href="css/index.css" rel="stylesheet">
-    <link href="css/aux.css" rel="stylesheet">
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body style="padding-top: 100px;">
-    <!-- Fixed navbar -->
-    <div class="navbar-wrapper">
-      <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-              <ul class="nav navbar-nav">
-                <li><a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Reservaciones</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Establecimientos <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Antros</a></li>
-                    <li><a href="#">Bares</a></li>
-                    <li><a href="#">Cafés</a></li>
-                    <li><a href="#">Restaurantes</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li class="dropdown-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Perfil <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Editar</a></li>
-                    <li><a href="#">Cerrar sesión</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div><!--/.nav-collapse -->
+    <li><a class="waves-effect" id="btn_log_out"><i class="material-icons">exit_to_app</i> Cerrar sesión</a></li>
+  </ul>
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper">
+        <div class="row">
+          <div class="col offset-s1 s10">
+            <a href="#" data-activates="slide-out" id="btn_collapse_menu"><i class="material-icons">menu</i></a>
           </div>
-        </nav>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <div id="contenido">
+        </div>
       </div>
     </div>
-
-
-    <div class="container" id="cargar_contenido"></div> <!-- /container -->
-
-  </body>
-    <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug
-      <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
+  </div>
+  <!-- Teal page content  -->
+  <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+</body>
 </html>

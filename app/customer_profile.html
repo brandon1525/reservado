@@ -1,0 +1,149 @@
+<div class="col s12">
+  <h2 class="header center-align">Perfil usuario</h2>
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">face</i>
+          <input id="name_user" type="text">
+          <label for="name_user">Nombre(s)</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">phone</i>
+          <input id="telephone_user" type="tel">
+          <label for="telephone_user">Teléfono</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">face</i>
+          <input id="last_name_p" type="text">
+          <label for="last_name_p">Apellido paterno</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">face</i>
+          <input id="last_name_m" type="text">
+          <label for="last_name_m">Apellido materno</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">date_range</i>
+          <input id="date_b" type="date" class="datepicker">
+          <label for="date_b">Fecha de nacimiento</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <div class="col s6">
+            <input class="with-gap" name="group1" type="radio" id="sex_mas" />
+            <label for="sex_mas">Hombre</label>
+          </div>
+          <div class="col s6">
+            <input class="with-gap" name="group1" type="radio" id="sex_fem"/>
+            <label for="sex_fem">Mujer</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="user" type="email" class="validate">
+          <label for="user">Correo</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">lock</i>
+          <input id="user_password" type="password">
+          <label for="user_password">Contraseña</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_edit_profile"><i class="material-icons">edit</i></a>
+        </div>
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_save_profile" disabled><i class="material-icons">save</i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+  load_info_user();
+  $('#btn_edit_profile').click(function(){
+    $('input').each(function(index,value){
+      $(value).attr('disabled',false);
+    });
+    $(this).attr('disabled',true);
+    $('#btn_save_profile').attr('disabled',false);
+  });
+  $('#btn_save_profile').click(function(){
+    var user_data = JSON.parse(localStorage.getItem("user_data"));
+    user_data['name']=$('#name_user').val();
+    user_data['last_name_p']=$('#last_name_p').val();
+    user_data['last_name_m']=$('#last_name_m').val();
+    user_data['phone']=$('#telephone_user').val();
+    user_data['sex'] = $('#sex_fem').is(':checked')? 'Femenino' : 'Masculino';
+    user_data['date_b']=$('#date_b').val();
+    user_data['user']=$('#user').val();
+    user_data['password']=$('#user_password').val();
+    $.when(update_profile(user_data)).done(function(json){
+      if(json.success){
+        $('#btn_save_profile').attr('disabled',true);
+        $('#btn_edit_profile').attr('disabled',false);
+        localStorage.setItem("user_data", JSON.stringify(user_data));
+        $('#slide-out').find('.name').text(user_data.name);
+        $('#slide-out').find('.email').text(user_data.user);
+        $('input').each(function(index,value){
+          $(value).attr('disabled',true);
+        });
+        Materialize.toast(json.msg, 5000, 'rounded green accent-2');
+      }else{
+        Materialize.toast("No se pudo actualizar el usuario", 5000, 'rounded red accent-2');
+      }
+    });
+  });
+
+});
+function load_info_user(){
+  var user_data = JSON.parse(localStorage.getItem("user_data"));
+  //console.log(user_data);
+  $('#date_b').pickadate({
+    selectMonths: true,
+    selectYears: 20,
+    format: 'dd/mm/yyyy',
+    today: 'Hoy',
+    clear: 'Limpiar',
+    close: 'Cerrar'
+  });
+  $('#name_user').val(user_data.name);
+  $('#telephone_user').val(user_data.phone);
+  $('#last_name_p').val(user_data.last_name_p);
+  $('#last_name_m').val(user_data.last_name_m);
+  var date_b = user_data.date_b.split('T')[0].split('-');
+  var picker = $('#date_b').pickadate('picker');
+  picker.set('select', [parseInt(date_b[0]), parseInt(date_b[1])-1, parseInt(date_b[2])])
+  //$('#date_b').val(date_b);
+  $('#user').val(user_data.user);
+  if(user_data.sex=="Masculino"){
+    $('#sex_mas').click();
+  }else{
+    $('#sex_fem').click();
+  }
+  $('#name_user').attr('disabled', true);
+  $('#telephone_user').attr('disabled', true);
+  $('#last_name_p').attr('disabled', true);
+  $('#last_name_m').attr('disabled', true);
+  $('#date_b').attr('disabled', true);
+  $('#user').attr('disabled', true);
+  $('#sex_mas').attr('disabled', true);
+  $('#sex_fem').attr('disabled', true);
+  $('#user_password').attr('disabled', true);
+  Materialize.updateTextFields();
+}
+function update_profile(user_data){
+  return $.ajax({
+    url: "http://localhost:3000/user/"+user_data.id+"",
+    method: "PUT",
+    data: {
+      name: user_data.name, last_name_p: user_data.last_name_p, last_name_m: user_data.last_name_m, phone: user_data.phone,
+      sex: user_data.sex, date_b: user_data.date_b, user: user_data.user, password: user_data.password
+    }
+  });
+}
+</script>

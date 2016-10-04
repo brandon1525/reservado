@@ -40,9 +40,12 @@ $(document).ready(function(){
 					localStorage.setItem("user_data", JSON.stringify(json.user_data));
 					if(json.user_data.type_user==1){
 						localStorage.setItem("business_data", JSON.stringify(json.business_data));
+						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Inicio de sesión exitoso').show().fadeOut( 3000);
+						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/business_index.html";
+					}else{
+						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Inicio de sesión exitoso').show().fadeOut( 3000);
+						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/customer_index.html";
 					}
-					$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Inicio de sesión exitoso').show().fadeOut( 3000);
-					window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/";
 				}else{
 					$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 				}

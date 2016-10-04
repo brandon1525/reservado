@@ -67,9 +67,20 @@
 				<div class="form-group has-feedback">
 					<label class="control-label" for="password_user">Contraseña</label>
 					<input class="form-control input-lg" type="password" id="password_user" placeholder="Password" />
-					<span class="fa fa-lock form-control-feedback" aria-hidden="true"></span>
+					<span class="fa fa-lock form-control-feedback" aria-hidden="true">
+						<div id="pswd_info">
+							<h4>La contraseña debe tener estos requisitos:</h4>
+							<ul>
+								<li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
+								<li id="capital" class="invalid">Al menos <strong>una letra en mayuscula</strong></li>
+								<li id="number" class="invalid">Al menos <strong>un numero</strong></li>
+								<li id="length" class="invalid">Bebe tener <strong>8 caracteres</strong></li>
+							</ul>
+						</div>	
+					</span>
 				</div>
 			</div>
+			
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="repassword_user">Repetir contraseña</label>
@@ -123,41 +134,81 @@
 		$('#sex_mas').click(function(){
 			$(this).closest('.form-group').removeClass('has-error');
 		});
+		$('#password_user').keyup(function() { 
+		
+			checkcamp($(this).val());
+		
+		}).blur(function() {
+			$('#pswd_info').hide();
+		});
 	});
+	function checkcamp(pass){
+		var paslength=false;
+		var passletra=false;
+		var passmayusc=false;
+		var passnum=false;
+		if ( pass.length >= 8 ) {
+			$('#length').removeClass('invalid').addClass('valid'); paslength=true;
+		} else {
+			$('#length').removeClass('valid').addClass('invalid'); 
+		}
+		if ( pass.match(/[A-z]/) ) {
+			$('#letter').removeClass('invalid').addClass('valid'); passletra=true;
+		} else {
+			$('#letter').removeClass('valid').addClass('invalid'); 
+		}
+		if ( pass.match(/[A-Z]/) ) {
+			$('#capital').removeClass('invalid').addClass('valid'); passmayusc=true;
+		} else {
+			$('#capital').removeClass('valid').addClass('invalid'); 
+		}
+		if ( pass.match(/\d/) ) {
+			$('#number').removeClass('invalid').addClass('valid');  passnum=true;
+		} else {
+			$('#number').removeClass('valid').addClass('invalid');
+		}
+		if( paslength && passletra && passmayusc && passnum){ 
+			$('#pswd_info').show();
+			return true;
+		}else{
+			$('#pswd_info').show();
+			return false;
+		}
+	}
 	function validate_form() {
 		var validate = true;
 		if($('#user_name').val()=="" || $('#user_name').val().replace(' ','')==""){
 			$('#user_name').closest('.form-group').addClass('has-error');
 			$('#user_name').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo usuario').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if($('#user_last_1').val()=="" || $('#user_last_1').val().replace(' ','')==""){
 			$('#user_last_1').closest('.form-group').addClass('has-error');
 			$('#user_last_1').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo apellido parterno').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if($('#user_last_2').val()=="" || $('#user_last_2').val().replace(' ','')==""){
 			$('#user_last_2').closest('.form-group').addClass('has-error');
 			$('#user_last_2').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo apellido materno').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if($('#user_phone').val()=="" || $('#user_phone').val().replace(' ','')==""){
 			$('#user_phone').closest('.form-group').addClass('has-error');
 			$('#user_phone').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo telefono').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if(!$('#sex_fem').is(':checked')){
 			if(!$('#sex_mas').is(':checked')){
 				$('#sex_mas').closest('.form-group').addClass('has-error');
-				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo sexo').show().fadeOut( 3000);
 				validate=false;
 				return false;
 			}
@@ -165,14 +216,15 @@
 		if($('#user_years').val()=="" || $('#user_years').val().replace(' ','')==""){
 			$('#user_years').closest('.form-group').addClass('has-error');
 			$('#user_years').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('llena el campo edad').show().fadeOut( 3000);
 			validate = false;
 			return false;
 		}
-		if($('#email_user').val()=="" || $('#email_user').val().replace(' ','')==""){
+		var exp = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+		if(!exp.test($('#email_user').val().trim())){
 			$('#email_user').closest('.form-group').addClass('has-error');
 			$('#email_user').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Verifica tu correo que sea correcto').show().fadeOut( 3000);
 			validate = false;
 			return false;
 		}

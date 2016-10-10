@@ -1,7 +1,7 @@
 $(document).ready(function(){
   user_exist();
   set_title_nav_side();
-  set_bar_elements();
+  //set_bar_elements();
 });
 function set_bar_elements(){
   var user_data = JSON.parse(localStorage.getItem('user_data'));

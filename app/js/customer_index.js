@@ -2,10 +2,11 @@ $(document).ready(function(){
   user_exist();
   set_title_nav_side();
   //set_bar_elements();
+  $('#contenido').empty().load('customer_profile.html');
 });
 function set_bar_elements(){
   var user_data = JSON.parse(localStorage.getItem('user_data'));
-  $.when(charge_places()).done(function(json){
+  $.when(get_places_grouped()).done(function(json){
     if(json.success){
       $.each(json.places, function(index, value){
         var data_append = '<li class="no-padding">'+
@@ -30,12 +31,5 @@ function set_bar_elements(){
     $('#charge_places .collapsible').collapsible({
       accordion : false
     });
-  });
-}
-
-function charge_places(){
-  return $.ajax({
-    url: "http://localhost:3000/places/grouped",
-    method: "GET"
   });
 }

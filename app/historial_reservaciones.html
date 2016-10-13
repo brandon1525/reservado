@@ -1,0 +1,74 @@
+<div class="col s12">
+  <h2 class="header center-align">Historial de reservaciones</h2>
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <table class="responsive-table bordered highlight centered" id="table_reservations">
+          <thead>
+            <tr>
+              <th data-field="place">Lugar</th>
+              <th data-field="no_people">Numero de personas</th>
+              <th data-field="date">Fecha</th>
+              <th data-field="hour">Hora</th>
+              <th data-field="options">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+  var user_data = JSON.parse(localStorage.getItem('user_data'));
+  $.when(get_historial(user_data.id)).done(function(json){
+    if(json.success){
+      $.each(json.reservations,function(index,value){
+        var date = new Date(value.date_reservation);
+        var datenow = Date.now();
+        var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+        var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+        var var_append="";
+        var_append+='<tr data-id_reservation="'+value._id+'">'+
+            '<td data-id="'+value.place._id+'">'+value.place.name+'</td>'+
+            '<td>'+value.no_people+'</td>'+
+            '<td>'+date_reservation+'</td>'+
+            '<td>'+time_reservation+'</td>'+
+            '<td>';
+            if(date>=datenow){
+              var_append+='<a class="btn_edit_reservation btn-floating btn-large waves-effect waves-light red"><i class="material-icons">cancel</i></a>';
+            }else{
+              var_append+='<a class="btn-floating disabled btn-large waves-effect waves-light red"><i class="material-icons">cancel</i></a>';
+            }
+            var_append+='<a class="btn_save_reservation btn-floating btn-large waves-effect waves-light red" style="display: none;"><i class="material-icons">save</i></a>';
+            var_append+='</td></tr>';
+            $('#table_reservations tbody').append(var_append);
+      });
+    }else{
+      console.log("error");
+    }
+  });
+  //$('#table_reservations');
+});
+$(document).on('click','.btn_edit_reservation',function(){
+
+  $(this).hide();
+  $(this).closest('td').find('.btn_save_reservation').show();
+  //console.log($(this).closest('tr').find('td').eq(1));
+});
+$(document).on('click','.btn_save_reservation',function(){
+  $(this).hide();
+  $(this).closest('td').find('.btn_edit_reservation').show();
+});
+function get_historial(user_responsible){
+  return $.ajax({
+    url: "http://localhost:3000/reservations/user",
+    method: "POST",
+    data: {
+      user_responsible: user_responsible
+    }
+  });
+}
+</script>

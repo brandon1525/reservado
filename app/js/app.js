@@ -21,6 +21,13 @@ function user_exist() {
 }
 function set_title_nav_side(){
   var user_data = JSON.parse(localStorage.getItem('user_data'));
+  console.log(user_data);
   $('#slide-out').find('.name').text(user_data.name);
   $('#slide-out').find('.email').text(user_data.user);
+}
+function get_places_grouped(){
+  return $.ajax({
+    url: "http://localhost:3000/places/grouped",
+    method: "GET"
+  });
 }

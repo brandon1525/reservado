@@ -78,7 +78,6 @@ $(document).ready(function(){
 
   $('#create_reservation').click(function(){
     var user_data = JSON.parse(localStorage.getItem('user_data'));
-    console.log(user_data);
     var user_responsible = user_data.id;
     var date_reservation = $('#date_reservation').val().split('/');
 		var year = parseInt(date_reservation[2]);
@@ -91,11 +90,13 @@ $(document).ready(function(){
     var place = $('#select_places').val();
     var no_people = parseInt($('#no_people').val());
     $.when(create_reservation(user_responsible, place, date_reservation, no_people)).done(function(json){
-      console.log(json);
       if(json.success){
         $('#image_reservation').closest('a').attr( 'href', json.qr );
         $('#image_reservation').closest('a').attr( 'download', user_data.id+".png" );
         $('#image_reservation').attr( 'src', json.qr );
+        $('#image_reservation').click();
+        $('#image_reservation').closest('a').removeAttr('download');
+        $('#image_reservation').closest('a').removeAttr('href');
       }else{
         Materialize.toast(json.msg, 3000, 'rounded red');
       }
@@ -103,8 +104,7 @@ $(document).ready(function(){
   });
 });
 function load_business_select() {
-  $.when(charge_places()).done(function(json){
-    console.log(json);
+  $.when(get_places_grouped()).done(function(json){
     if(json.success){
       var data_append = '';
       $('#select_places').material_select('destroy');
@@ -121,12 +121,6 @@ function load_business_select() {
     }else{
       Materialize.toast(json.msg, 3000, 'rounded red');
     }
-  });
-}
-function charge_places(){
-  return $.ajax({
-    url: "http://localhost:3000/places/grouped",
-    method: "GET"
   });
 }
 function create_reservation(user_responsible, place, date_reservation, no_people) {

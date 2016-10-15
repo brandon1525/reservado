@@ -142,39 +142,6 @@
 			$('#pswd_info').hide();
 		});
 	});
-	function checkcamp(pass){
-		var paslength=false;
-		var passletra=false;
-		var passmayusc=false;
-		var passnum=false;
-		if ( pass.length >= 8 ) {
-			$('#length').removeClass('invalid').addClass('valid'); paslength=true;
-		} else {
-			$('#length').removeClass('valid').addClass('invalid'); 
-		}
-		if ( pass.match(/[A-z]/) ) {
-			$('#letter').removeClass('invalid').addClass('valid'); passletra=true;
-		} else {
-			$('#letter').removeClass('valid').addClass('invalid'); 
-		}
-		if ( pass.match(/[A-Z]/) ) {
-			$('#capital').removeClass('invalid').addClass('valid'); passmayusc=true;
-		} else {
-			$('#capital').removeClass('valid').addClass('invalid'); 
-		}
-		if ( pass.match(/\d/) ) {
-			$('#number').removeClass('invalid').addClass('valid');  passnum=true;
-		} else {
-			$('#number').removeClass('valid').addClass('invalid');
-		}
-		if( paslength && passletra && passmayusc && passnum){ 
-			$('#pswd_info').show();
-			return true;
-		}else{
-			$('#pswd_info').show();
-			return false;
-		}
-	}
 	function validate_form() {
 		var validate = true;
 		if($('#user_name').val()=="" || $('#user_name').val().replace(' ','')==""){
@@ -228,7 +195,7 @@
 			validate = false;
 			return false;
 		}
-		if($('#password_user').val()=="" || $('#password_user').val().replace(' ','')==""){
+		if(($('#password_user').val()=="" || $('#password_user').val().replace(' ','')=="")&&($(#password_user).val().length<8)){
 			$('#password_user').closest('.form-group').addClass('has-error');
 			$('#password_user').focus();
 			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);

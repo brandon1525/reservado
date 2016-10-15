@@ -4,25 +4,33 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Reservado.com</title>
   <!--Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="css/icon.css" rel="stylesheet">
   <!--Import materialize.css-->
+  <link rel="stylesheet" href="css/bootstrap-select.min.css" media="screen" title="no title">
   <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<link type="text/css" rel="stylesheet" href="css/materialize.clockpicker.css"  media="screen,projection"/>
 
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-
+<style>
+  html{
+    font-family: 'Lato', sans-serif;
+  }
+</style>
 <body>
   <ul id="slide-out" class="side-nav">
     <li>
       <div class="userView grey darken-3">
-        <a href="#!user"><i class="medium material-icons">account_circle</i></a>
+        <a href="#!user"><i class="medium material-icons teal-text text-accent-2">account_circle</i></a>
         <a href="#!name"><span class="white-text name"></span></a>
         <a href="#!email"><span class="white-text email"></span></a>
       </div>
     </li>
-    <li><a class="link_content" data-href="perfil.html"><i class="material-icons">account_circle</i> Ver perfil</a></li>
-    <li><a class="link_content" data-href="perfil.html"><i class="material-icons">event</i> Reservacion</a></li>
+    <li><a class="link_content" data-href="customer_profile.html"><i class="material-icons">account_circle</i>Ver perfil</a></li>
+    <li><a class="link_content" data-href="reservacion.html"><i class="material-icons">event</i>Reservacion</a></li>
+    <li><a class="link_content" data-href="historial_reservaciones.html"><i class="material-icons">event</i>Historial reservaciones</a></li>
     <li><a class="subheader">Establecimientos</a></li>
     <div id="charge_places"></div>
 
@@ -30,7 +38,7 @@
   </ul>
   <div class="navbar-fixed">
     <nav>
-      <div class="nav-wrapper">
+      <div class="nav-wrapper red darken-1">
         <div class="row">
           <div class="col offset-s1 s10">
             <a href="#" data-activates="slide-out" id="btn_collapse_menu"><i class="material-icons">menu</i></a>
@@ -49,7 +57,10 @@
   </div>
   <!-- Teal page content  -->
   <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
   <script type="text/javascript" src="js/materialize.min.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/materialize.clockpicker.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/customer_index.js"></script>
 </body>
 </html>

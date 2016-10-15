@@ -1,0 +1,135 @@
+<div class="col s12">
+ <!-- Modal Structure -->
+ <div id="modal1" class="modal">
+   <div class="modal-content">
+     <h4>Crear reservación</h4>
+     <p>Recuerda que tienes 15 minutos para que tu resrvación sea válida</p>
+   </div>
+   <div class="modal-footer">
+     <a href="#!" class="modal-action modal-close waves-effect waves-red red btn" id="create_reservation">Acepto</a>
+   </div>
+ </div>
+  <h2 class="header center-align">Crear reservación</h2>
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <select id="select_places">
+          </select>
+          <label>Establecimiento</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">face</i>
+          <input id="no_people" type="number">
+          <label for="no_people">Número de personas</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">date_range</i>
+          <input id="date_reservation" type="date" class="datepicker">
+          <label for="date_reservation">Fecha de la reservation</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">access_time</i>
+          <input id="time_reservation" type="text" class="timepicker">
+          <label for="time_reservation">Hora de la reservation</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <!-- Modal Trigger -->
+         <a id="modal1_trigger" class="modal-trigger waves-effect waves-light btn" href="#modal1">Crear reservación</a>
+        </div>
+      </div>
+    </div>
+    <div class="col s12">
+      <a href="" download="">
+        <img src="" id="image_reservation">
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+  $('#select_places').material_select();
+  load_business_select();
+  //$('#select_places').selectpicker();
+  $('#modal1_trigger').leanModal();
+  $('#date_reservation').pickadate({
+    selectMonths: true,
+    selectYears: 20,
+    format: 'dd/mm/yyyy',
+    closeOnSelect: true,
+    today: 'Hoy',
+    clear: 'Limpiar',
+    close: 'Cerrar',
+    disable: [
+      { from: [0,0,0], to: new Date((new Date()).valueOf()-1000*60*60*24) }
+    ]
+  });
+  $('#time_reservation').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		twelvehour: false,
+		autoclose: true,
+		donetext: "Cerrar"
+	});
+
+  $('#create_reservation').click(function(){
+    var user_data = JSON.parse(localStorage.getItem('user_data'));
+    var user_responsible = user_data.id;
+    var date_reservation = $('#date_reservation').val().split('/');
+		var year = parseInt(date_reservation[2]);
+		var month = parseInt(date_reservation[1])-1;
+		var day = parseInt(date_reservation[0]);
+    var time_reservation = $('#time_reservation').val().split(':');
+    var hour = parseInt(time_reservation[0]);
+    var minutes = parseInt(time_reservation[1]);
+		date_reservation = new Date(year, month, day, hour, minutes, 0, 0);
+    var place = $('#select_places').val();
+    var no_people = parseInt($('#no_people').val());
+    $.when(create_reservation(user_responsible, place, date_reservation, no_people)).done(function(json){
+      if(json.success){
+        $('#image_reservation').closest('a').attr( 'href', json.qr );
+        $('#image_reservation').closest('a').attr( 'download', user_data.id+".png" );
+        $('#image_reservation').attr( 'src', json.qr );
+        $('#image_reservation').click();
+        $('#image_reservation').closest('a').removeAttr('download');
+        $('#image_reservation').closest('a').removeAttr('href');
+      }else{
+        Materialize.toast(json.msg, 3000, 'rounded red');
+      }
+    });
+  });
+});
+function load_business_select() {
+  $.when(get_places_grouped()).done(function(json){
+    if(json.success){
+      var data_append = '';
+      $('#select_places').material_select('destroy');
+      $.each(json.places, function(index, value){
+        data_append += '<optgroup label="'+index+'">';
+        $.each(value, function(index2, value2){
+          data_append+='<option value="'+value2._id+'" class="left">'+value2.name+'</option>';
+        });
+        data_append+='</optgroup>';
+      });
+      $('#select_places').append(data_append);
+      //$('#select_places').material_select('update');
+      $('#select_places').material_select();
+    }else{
+      Materialize.toast(json.msg, 3000, 'rounded red');
+    }
+  });
+}
+function create_reservation(user_responsible, place, date_reservation, no_people) {
+  return $.ajax({
+    url: "http://localhost:3000/reservation",
+    method: "POST",
+    data: {
+      user_responsible: user_responsible, place: place, date_reservation: date_reservation, no_people: no_people
+    }
+  });
+}
+</script>

@@ -118,7 +118,7 @@
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Usuario creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("user_data", JSON.stringify(json.user_data));
-						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/";
+						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/customer_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 					}

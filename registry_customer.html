@@ -76,11 +76,11 @@
 								<li id="number" class="invalid">Al menos <strong>un numero</strong></li>
 								<li id="length" class="invalid">Bebe tener <strong>8 caracteres</strong></li>
 							</ul>
-						</div>	
+						</div>
 					</span>
 				</div>
 			</div>
-			
+
 			<div class="form-horizontal">
 				<div class="form-group has-feedback">
 					<label class="control-label" for="repassword_user">Repetir contraseña</label>
@@ -133,13 +133,6 @@
 		});
 		$('#sex_mas').click(function(){
 			$(this).closest('.form-group').removeClass('has-error');
-		});
-		$('#password_user').keyup(function() { 
-		
-			checkcamp($(this).val());
-		
-		}).blur(function() {
-			$('#pswd_info').hide();
 		});
 	});
 	function validate_form() {
@@ -195,7 +188,7 @@
 			validate = false;
 			return false;
 		}
-		if(($('#password_user').val()=="" || $('#password_user').val().replace(' ','')=="")&&($(#password_user).val().length<8)){
+		if(($('#password_user').val()=="" || $('#password_user').val().replace(' ','')=="")&&($('#password_user').val().length<8)){
 			$('#password_user').closest('.form-group').addClass('has-error');
 			$('#password_user').focus();
 			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);

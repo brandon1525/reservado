@@ -115,18 +115,33 @@
 				<span class="fa fa-credit-card form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
-		<div class="form-inline">
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+		<div class="form-horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_month">MM</label>
 				<input class="form-control input-lg" type="text" id="card_month" placeholder="MM" />
 			</div>
+		</div>
+		<div class="horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_year">YY</label>
 				<input class="form-control input-lg" type="text" id="card_year" placeholder="YY" />
 			</div>
+		</div>
+		<div class="horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_ccv">CCV</label>
 				<input class="form-control input-lg" type="text" id="card_ccv" placeholder="CCV" />
 				<span class="fa fa-credit-card-alt form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 		<div class="form-horizontal">
 			<div class="form-group has-feedback">
 				<label class="control-label" for="card_name">Nombre en la tarjeta</label>
@@ -144,7 +159,8 @@
 </div>
 <script>
 	$(document).ready(function(){
-		var PLAN;
+		var PLAN="Q";
+		console.log(PLAN);
 		$('.type_plan').click(function(){
 			$('.type_plan').each(function(index, value){
         		$(value).removeClass('active');
@@ -229,7 +245,7 @@
 				return false;
 			}
 		}
-		if (PLAN != 0 or PLAN !=1) {
+		if (PLAN=="Q") {
 			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Selecciona un tipo de plan').show().fadeOut( 3000);
 			return false;
 		}

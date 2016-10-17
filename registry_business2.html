@@ -1,3 +1,12 @@
+<style media="screen">
+.type_plan{
+  cursor: pointer;
+}
+.type_plan.active{
+  border: 5px solid #00BCD4;
+  cursor: pointer;
+}
+</style>
 <div class="container">
 	<h2 class="text-center">Registro establecimiento</h2>
 	<div class="row">
@@ -46,7 +55,7 @@
 	<div class="row">
 	   <div class="col-md-3">
 	   </div>
-	   <div class="col-md-3">
+	   <div class="col-md-3 type_plan">
 	      <div class="panel panel-danger">
 	         <div class="panel-heading">
 	            <h3 class="text-center">PLAN NORMAL</h3>
@@ -68,11 +77,10 @@
 	               <span class="glyphicon glyphicon-remove"></span> Asistencia Personal
 	            </li>
 	         </ul>
-	         <div id="Normal" class="panel-footer"> <a class="btn btn-lg btn-block btn-danger" href="#">SUBSCRIBE</a> </div>
 	      </div>
 	   </div>
-	   <div class="col-md-3">
-	      <div class="panel panel-danger">
+	   <div class="col-md-3 type_plan">
+	      <div class="panel panel-danger tipe">
 	         <div class="panel-heading">
 	            <h3 class="text-center">PLAN PREMIUM</h3>
 	         </div>
@@ -93,7 +101,6 @@
 	               <span class="glyphicon glyphicon-ok"></span> Asistencia Personal
 	            </li>
 	         </ul>
-	         <div id="Premium" class="panel-footer"> <a class="btn btn-lg btn-block btn-danger" href="#">SUBSCRIBE</a> </div>
 	      </div>
 	   </div>
 	   <div class="col-md-3">
@@ -108,18 +115,33 @@
 				<span class="fa fa-credit-card form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
-		<div class="form-inline">
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+		<div class="form-horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_month">MM</label>
 				<input class="form-control input-lg" type="text" id="card_month" placeholder="MM" />
 			</div>
+		</div>
+		<div class="horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_year">YY</label>
 				<input class="form-control input-lg" type="text" id="card_year" placeholder="YY" />
 			</div>
+		</div>
+		<div class="horizontal">
 			<div class="form-group has-feedback">
+				<label class="control-label" for="card_ccv">CCV</label>
 				<input class="form-control input-lg" type="text" id="card_ccv" placeholder="CCV" />
 				<span class="fa fa-credit-card-alt form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 		<div class="form-horizontal">
 			<div class="form-group has-feedback">
 				<label class="control-label" for="card_name">Nombre en la tarjeta</label>
@@ -137,13 +159,17 @@
 </div>
 <script>
 	$(document).ready(function(){
-		var PLAN="";
-		$('#Normal').click(function(){
-			PLAN="Normal";
+		var PLAN="Q";
+		console.log(PLAN);
+		$('.type_plan').click(function(){
+			$('.type_plan').each(function(index, value){
+        		$(value).removeClass('active');
+        	});
+      		$(this).addClass('active');
+      		PLAN=$('.type_plan').index($('.type_plan.active'));
+      		console.log(PLAN);
 		});
-		$('Premium').click(function(){
-			PLAN="Premium";
-		})
+		$('.type_plan').index($('.type_plan.active'));
 		$('#type').selectpicker();
 		$('.form-group input').keyup(function(){
 			$(this).closest('.form-group').removeClass('has-error');
@@ -219,7 +245,7 @@
 				return false;
 			}
 		}
-		if (PLAN=="") {
+		if (PLAN=="Q") {
 			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Selecciona un tipo de plan').show().fadeOut( 3000);
 			return false;
 		}

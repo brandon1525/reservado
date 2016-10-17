@@ -1,0 +1,44 @@
+<div class="col s12">
+  <h2 class="header center-align">Reservaciones</h2>
+  <div class="row">
+    <div id="calendar">
+
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#calendar').fullCalendar({
+    dayClick: function(date, jsEvent, view) {
+
+        console.log('Clicked on: ' + date.format());
+
+        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+        console.log('Current view: ' + view.name);
+
+        // change the day's background color just for fun
+        $(this).css('background-color', 'red');
+    },
+    eventClick: function(calEvent, jsEvent, view) {
+
+        console.log('Event: ' + calEvent.title);
+        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        console.log('View: ' + view.name);
+
+        // change the border color just for fun
+        $(this).css('border-color', 'blue');
+
+    },
+    locale: "es",
+    header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,basicWeek'
+    },
+    defaultView: 'month'
+  });
+});
+
+
+</script>

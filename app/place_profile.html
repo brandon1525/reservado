@@ -119,6 +119,56 @@
   </div>
 </div>
 <script type="text/javascript">
+var creditcards = {
+  list:[
+    {
+      brand:          'American Express',
+      image:          'img/creditcards/american-express.png',
+      verification:   '^3[47][0-9]',
+      separation:     '^([0-9]{4})([0-9]{6})?(?:([0-9]{6})([0-9]{5}))?$',
+      hidden:         '**** ****** *[0-9][0-9][0-9][0-9]',
+      accepted:       true,
+      length:         15
+    },
+    {
+      brand:          'MasterCard',
+      image:          'img/creditcards/mastercard.png',
+      verification:   '^5[1-5][0-9]',
+      separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+      hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+      accepted:       true,
+      length:         16
+    },
+    {
+      brand:          'Visa',
+      image:          'img/creditcards/visa.png',
+      verification:   '^4[0-9]',
+      separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+      hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+      accepted:       true,
+      length:         16
+    },
+    {
+      brand:          'Discover',
+      image:          'img/creditcards/discover.png',
+      verification:   '^4(?:011|5[0-9]{2})[0-9]',
+      separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+      hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+      accepted:       false,
+      length:         16
+    },
+    {
+      brand:          'JCB',
+      image:          'img/creditcards/jcb.png',
+      verification:   '^(?:2131|1800|35[0-9]{3})[0-9]',
+      separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+      hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+      accepted:       false,
+      length:         16
+    }
+  ],
+  active:null
+};
 $(document).ready(function() {
   load_info_place();
   $('#type_business').material_select();
@@ -166,8 +216,6 @@ $(document).ready(function() {
       date : $('#date_card').val()
     }
     business_data['payment_method'] = payment_method;
-    console.log(user_data);
-    console.log(business_data);
     $.when(update_place(business_data)).done(function(json){
       if(json.success){
         $('#btn_save_place').attr('disabled',true);
@@ -186,58 +234,6 @@ $(document).ready(function() {
     });
   });
   Materialize.updateTextFields();
-  var creditcards = {
-    list:[
-      {
-        brand:          'American Express',
-        image:          'img/creditcards/american-express.png',
-        verification:   '^3[47][0-9]',
-        separation:     '^([0-9]{4})([0-9]{6})?(?:([0-9]{6})([0-9]{5}))?$',
-        hidden:         '**** ****** *[0-9][0-9][0-9][0-9]',
-        accepted:       true,
-        length:         15
-      },
-      {
-        brand:          'MasterCard',
-        image:          'img/creditcards/mastercard.png',
-        verification:   '^5[1-5][0-9]',
-        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
-        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
-        accepted:       true,
-        length:         16
-      },
-      {
-        brand:          'Visa',
-        image:          'img/creditcards/visa.png',
-        verification:   '^4[0-9]',
-        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
-        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
-        accepted:       true,
-        length:         16
-      },
-      {
-        brand:          'Discover',
-        image:          'img/creditcards/discover.png',
-        verification:   '^4(?:011|5[0-9]{2})[0-9]',
-        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
-        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
-        accepted:       false,
-        length:         16
-      },
-      {
-        brand:          'JCB',
-        image:          'img/creditcards/jcb.png',
-        verification:   '^(?:2131|1800|35[0-9]{3})[0-9]',
-        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
-        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
-        accepted:       false,
-        length:         16
-      }
-    ],
-    active:null
-  };
-
-
   //On Keydown
   $('#number_card').keydown(function(e){
     -1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()
@@ -336,6 +332,28 @@ function load_info_place(){
   }
   $('.type_plan').eq(business_data.type_plan).addClass('active');
   $('#number_card').val(business_data.payment_method.number_card);
+  var card = $('#number_card').val().replace(/[^0-9]/g,''),
+  trim = $.trim( $('#number_card').val().slice(0,-1) );
+  for( var i=0; i<creditcards.list.length; i++ ){
+    if(card.match( new RegExp(creditcards.list[i].verification) )){
+      creditcards.active = i;
+      if( $(this).next('img').length == 0 ){
+        $(this).next('small').remove();
+        $("#image_credit").attr("src",creditcards.list[i].image);
+        $("#image_credit").attr("alt",creditcards.list[i].brand);
+        $("#image_credit").show();
+      }
+      if( !creditcards.list[i].accepted && $(this).nextAll('small').length == 0 ){
+        $('#image_credit').hide();
+        $(this).next('img').after('<small style="margin-left:5px; color:#F00;">'+'Tarjeta de crédito no aceptada'+'</small>');
+      }
+      break;
+    }
+  }
+  if( creditcards.active == null && card.length > 4 && $(this).nextAll('small').length == 0 ){
+    $('#image_credit').hide();
+    $('#number_card').after('<small style="margin-left:5px; color:#F00;">'+'Tarjeta de crédito inválida'+'</small>');
+  }
   $('#cvv_card').val(business_data.payment_method.cvv);
   $('#date_card').val(business_data.payment_method.date);
   $('#name_business').attr('disabled', true);
@@ -347,7 +365,6 @@ function load_info_place(){
   $('#cvv_card').attr('disabled', true);
   $('#date_card').attr('disabled', true);
   Materialize.updateTextFields();
-  console.log(business_data);
 }
 
 function update_place(business_data){

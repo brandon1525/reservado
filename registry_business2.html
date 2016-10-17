@@ -44,6 +44,92 @@
 		</div>
 	</div>
 	<div class="row">
+	   <div class="col-md-3">
+	   </div>
+	   <div class="col-md-3">
+	      <div class="panel panel-danger">
+	         <div class="panel-heading">
+	            <h3 class="text-center">PLAN NORMAL</h3>
+	         </div>
+	         <div class="panel-body text-center">
+	            <p class="lead" style="font-size:30px"><strong>$0/mes</strong></p>
+	         </div>
+	         <ul class="list-group list-group-flush text-center">
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-remove"></span> Posicionamiento
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Manejo de Reservaciones
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Dashboard
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-remove"></span> Asistencia Personal
+	            </li>
+	         </ul>
+	         <div id="Normal" class="panel-footer"> <a class="btn btn-lg btn-block btn-danger" href="#">SUBSCRIBE</a> </div>
+	      </div>
+	   </div>
+	   <div class="col-md-3">
+	      <div class="panel panel-danger">
+	         <div class="panel-heading">
+	            <h3 class="text-center">PLAN PREMIUM</h3>
+	         </div>
+	         <div class="panel-body text-center">
+	            <p class="lead" style="font-size:30px"><strong>$50/mes</strong></p>
+	         </div>
+	         <ul class="list-group list-group-flush text-center">
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Posicionamiento
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Manejo de Reservaciones
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Dashboard
+	            </li>
+	            <li class="list-group-item">
+	               <span class="glyphicon glyphicon-ok"></span> Asistencia Personal
+	            </li>
+	         </ul>
+	         <div id="Premium" class="panel-footer"> <a class="btn btn-lg btn-block btn-danger" href="#">SUBSCRIBE</a> </div>
+	      </div>
+	   </div>
+	   <div class="col-md-3">
+	   </div>
+</div>
+<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+		<div class="form-horizontal">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="card_number">Numero de Tarjeta</label>
+				<input class="form-control input-lg" type="text" id="card_number" placeholder="Numero de Tarjeta" />
+				<span class="fa fa-credit-card form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="form-inline">
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_month" placeholder="MM" />
+			</div>
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_year" placeholder="YY" />
+			</div>
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_ccv" placeholder="CCV" />
+				<span class="fa fa-credit-card-alt form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="form-horizontal">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="card_name">Nombre en la tarjeta</label>
+				<input class="form-control input-lg" type="text" id="card_name" placeholder="Nombre en la tarjeta" />
+				<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+	</div>	
+</div>
+<div class="row">
 		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
 			<button class="btn btn-block btn-black" id="registry_business2">Registrar</button>
 		</div>
@@ -51,6 +137,13 @@
 </div>
 <script>
 	$(document).ready(function(){
+		var PLAN="";
+		$('#Normal').click(function(){
+			PLAN="Normal";
+		});
+		$('Premium').click(function(){
+			PLAN="Premium";
+		})
 		$('#type').selectpicker();
 		$('.form-group input').keyup(function(){
 			$(this).closest('.form-group').removeClass('has-error');
@@ -71,13 +164,15 @@
 			if($('#type').find('option:selected').text()=="Otro"){
 				type = $('#other_type').val();
 			}
+			var date=$('#card_month').val()+"/"+$('card_year');
+			var payment_method ={number_card:$('#card_number'),cvv:$('#card_ccv'),date:date}
 			var owner = JSON.parse(localStorage.getItem('user_data')).id;
 			if(validate_form()){
-				$.when(registry_business2(name, description, total_people, type, owner)).done(function(json){
+				$.when(registry_business2(name, description, total_people, type, owner, PLAN, payment_method)).done(function(json){
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Negocio creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("business_data", JSON.stringify(json.business_data));
-						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/business_index.html";
+						window.location="http://localhost/reservado/app/business_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 					}
@@ -90,21 +185,21 @@
 		if($('#name').val()=="" || $('#name').val().replace(' ','')==""){
 			$('#name').closest('.form-group').addClass('has-error');
 			$('#name').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Introducir un nombre').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if($('#description').val()=="" || $('#description').val().replace(' ','')==""){
 			$('#description').closest('.form-group').addClass('has-error');
 			$('#description').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Haz una descripcion').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
 		if($('#total_people').val()=="" || $('#total_people').val().replace(' ','')==""){
 			$('#total_people').closest('.form-group').addClass('has-error');
 			$('#total_people').focus();
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Ingresa una cantidad de personas').show().fadeOut( 3000);
 			validate=false;
 			return false;
 		}
@@ -119,10 +214,14 @@
 			if($('#other_type').val()=="" || $('#other_type').val().replace(' ','')==""){
 				$('#other_type').closest('.form-group').addClass('has-error');
 				$('#other_type').focus();
-				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);
+				$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Seleccionar un tipo de lugar').show().fadeOut( 3000);
 				validate=false;
 				return false;
 			}
+		}
+		if (PLAN=="") {
+			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Selecciona un tipo de plan').show().fadeOut( 3000);
+			return false;
 		}
 		return validate;
 	}

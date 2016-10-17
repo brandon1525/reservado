@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<style>
+	.panel {
+
+    transition: padding 0.5s;
+    -moz-transition: padding 0.5s; /* Firefox 4 */
+    -webkit-transition: padding 0.5s; /* Safari and Chrome */
+    -o-transition: padding 0.5s; /* Opera */
+    -ms-transition:padding 0.5s; /* IE9 (maybe) */     
+  
+}
+
+.panel:hover {
+	padding:10px;
+}
+.credit-card-div  span { padding-top:10px; }
+.credit-card-div img { padding-top:30px; }
+.credit-card-div .small-font { font-size:9px; }
+.credit-card-div .pad-adjust { padding-top:10px; }
+		
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+		<div class="form-horizontal">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="card_number">Numero de Tarjeta</label>
+				<input class="form-control input-lg" type="text" id="card_number" placeholder="Numero de Tarjeta" />
+				<span class="fa fa-credit-card form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="form-inline">
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_month" placeholder="MM" />
+			</div>
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_year" placeholder="YY" />
+			</div>
+			<div class="form-group has-feedback">
+				<input class="form-control input-lg" type="text" id="card_ccv" placeholder="CCV" />
+				<span class="fa fa-credit-card-alt form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="form-horizontal">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="card_name">Nombre en la tarjeta</label>
+				<input class="form-control input-lg" type="text" id="card_name" placeholder="Nombre en la tarjeta" />
+				<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
+			</div>
+		</div>
+	</div>	
+</div>
+</div>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous">
+    </script>
+	<script>
+	$('.card').on("click",function(index,value){
+		$('value').each(function(i){
+			$(this).removeClass("enable");
+		});
+		$(this).addClass("enable");
+
+	});
+	</script>
+</body>
+</html>

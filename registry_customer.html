@@ -68,15 +68,6 @@
 					<label class="control-label" for="password_user">Contraseña</label>
 					<input class="form-control input-lg" type="password" id="password_user" placeholder="Password" />
 					<span class="fa fa-lock form-control-feedback" aria-hidden="true">
-						<div id="pswd_info">
-							<h4>La contraseña debe tener estos requisitos:</h4>
-							<ul>
-								<li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
-								<li id="capital" class="invalid">Al menos <strong>una letra en mayuscula</strong></li>
-								<li id="number" class="invalid">Al menos <strong>un numero</strong></li>
-								<li id="length" class="invalid">Bebe tener <strong>8 caracteres</strong></li>
-							</ul>
-						</div>	
 					</span>
 				</div>
 			</div>
@@ -118,7 +109,7 @@
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Usuario creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("user_data", JSON.stringify(json.user_data));
-						window.location="http://localhost/Proyectos_web/Sistema_reservaciones/app/customer_index.html";
+						window.location="http://localhost/reservado/app/customer_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 					}
@@ -133,13 +124,6 @@
 		});
 		$('#sex_mas').click(function(){
 			$(this).closest('.form-group').removeClass('has-error');
-		});
-		$('#password_user').keyup(function() { 
-		
-			checkcamp($(this).val());
-		
-		}).blur(function() {
-			$('#pswd_info').hide();
 		});
 	});
 	function validate_form() {
@@ -195,7 +179,7 @@
 			validate = false;
 			return false;
 		}
-		if(($('#password_user').val()=="" || $('#password_user').val().replace(' ','')=="")&&($(#password_user).val().length<8)){
+		if(($('#password_user').val()=="" || $('#password_user').val().replace(' ','')=="")&&($('#password_user').val().length<8)){
 			$('#password_user').closest('.form-group').addClass('has-error');
 			$('#password_user').focus();
 			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Por favor llena todos los campos').show().fadeOut( 3000);

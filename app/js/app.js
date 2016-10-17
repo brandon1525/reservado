@@ -31,3 +31,13 @@ function get_places_grouped(){
     method: "GET"
   });
 }
+function update_profile(user_data){
+  return $.ajax({
+    url: "http://localhost:3000/user/"+user_data.id+"",
+    method: "PUT",
+    data: {
+      name: user_data.name, last_name_p: user_data.last_name_p, last_name_m: user_data.last_name_m, phone: user_data.phone,
+      sex: user_data.sex, date_b: user_data.date_b, user: user_data.user, password: user_data.password
+    }
+  });
+}

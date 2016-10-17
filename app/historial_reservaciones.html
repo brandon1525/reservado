@@ -1,4 +1,14 @@
 <div class="col s12">
+  <!-- Modal Structure -->
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <h4>Cancelar reservación</h4>
+      <p>Cancelar tu reservación generará mal historial</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-red red btn" id="cancel_reservation">Acepto</a>
+    </div>
+  </div>
   <h2 class="header center-align">Historial de reservaciones</h2>
   <div class="row">
     <div class="col s12">
@@ -10,7 +20,7 @@
               <th data-field="no_people">Numero de personas</th>
               <th data-field="date">Fecha</th>
               <th data-field="hour">Hora</th>
-              <th data-field="options">Opciones</th>
+              <th data-field="options">Cancelar reservación</th>
             </tr>
           </thead>
           <tbody>
@@ -23,45 +33,25 @@
 <script>
 $(document).ready(function(){
   var user_data = JSON.parse(localStorage.getItem('user_data'));
-  $.when(get_historial(user_data.id)).done(function(json){
-    if(json.success){
-      $.each(json.reservations,function(index,value){
-        var date = new Date(value.date_reservation);
-        var datenow = Date.now();
-        var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
-        var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
-        var var_append="";
-        var_append+='<tr data-id_reservation="'+value._id+'">'+
-            '<td data-id="'+value.place._id+'">'+value.place.name+'</td>'+
-            '<td>'+value.no_people+'</td>'+
-            '<td>'+date_reservation+'</td>'+
-            '<td>'+time_reservation+'</td>'+
-            '<td>';
-            if(date>=datenow){
-              var_append+='<a class="btn_edit_reservation btn-floating btn-large waves-effect waves-light red"><i class="material-icons">cancel</i></a>';
-            }else{
-              var_append+='<a class="btn-floating disabled btn-large waves-effect waves-light red"><i class="material-icons">cancel</i></a>';
-            }
-            var_append+='<a class="btn_save_reservation btn-floating btn-large waves-effect waves-light red" style="display: none;"><i class="material-icons">save</i></a>';
-            var_append+='</td></tr>';
-            $('#table_reservations tbody').append(var_append);
-      });
-    }else{
-      console.log("error");
-    }
+  fill_table(user_data);
+  $('#cancel_reservation').click(function(){
+    var user_id = user_data.id;
+    var reservation = $(this).data('reservation');
+    $.when(cancel_reservation(user_id, reservation)).done(function(json){
+      console.log(json);
+      if(json.success){
+        Materialize.toast(json.msg, 5000, 'rounded green accent-4');
+        fill_table(user_data);
+      }else{
+        Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+      }
+    });
   });
-  //$('#table_reservations');
 });
-$(document).on('click','.btn_edit_reservation',function(){
+$(document).on('click','.btn_cancel_reservation',function(){
+  $('#cancel_reservation').data('reservation',$(this).closest('tr').data('id_reservation'));
+});
 
-  $(this).hide();
-  $(this).closest('td').find('.btn_save_reservation').show();
-  //console.log($(this).closest('tr').find('td').eq(1));
-});
-$(document).on('click','.btn_save_reservation',function(){
-  $(this).hide();
-  $(this).closest('td').find('.btn_edit_reservation').show();
-});
 function get_historial(user_responsible){
   return $.ajax({
     url: "http://localhost:3000/reservations/user",
@@ -69,6 +59,52 @@ function get_historial(user_responsible){
     data: {
       user_responsible: user_responsible
     }
+  });
+}
+function cancel_reservation(user_id, reservation){
+  return $.ajax({
+    url: "http://localhost:3000/reservation/cancel",
+    method: "POST",
+    data: {
+      user_id: user_id, id_reservation: reservation
+    }
+  });
+}
+function fill_table(user_data){
+  $.when(get_historial(user_data.id)).done(function(json){
+    if(json.success){
+      $('#table_reservations tbody').html('');
+      $.each(json.reservations,function(index,value){
+        var date = new Date(value.date_reservation);
+        var datenow = Date.now();
+        var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+        var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+        var cancel = value.cancel;
+        var var_append="";
+        var_append+='<tr data-id_reservation="'+value._id+'">'+
+            '<td data-id="'+value.place._id+'">'+value.place.name+'</td>'+
+            '<td>'+value.no_people+'</td>'+
+            '<td>'+date_reservation+'</td>'+
+            '<td>'+time_reservation+'</td>'+
+            '<td>';
+            if(date>=datenow && !cancel){
+              //<!-- Modal Trigger -->
+              var_append+='<a class="modal-trigger btn_cancel_reservation btn-floating btn-large waves-effect waves-light red" data-target="modal2"><i class="material-icons">cancel</i></a>';
+            }else{
+              var_append+='<a class="btn-floating disabled btn-large waves-effect waves-light red"><i class="material-icons">cancel</i></a>';
+            }
+            var_append+='</td></tr>';
+            $('#table_reservations tbody').append(var_append);
+      });
+      Materialize.toast("Reservaciones cargadas correctamente", 5000, 'rounded green accent-4');
+    }else{
+      console.log("error");
+      Materialize.toast("Hay un problema al cargar las reservaciones", 5000, 'rounded red accent-2');
+    }
+    $('.modal-trigger').leanModal({
+        dismissible: true
+      }
+    );
   });
 }
 </script>

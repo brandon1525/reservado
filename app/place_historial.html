@@ -4,31 +4,61 @@
     <div id="calendar">
 
     </div>
+    <table class="responsive-table bordered highlight centered" id="table_reservations_place">
+      <thead>
+        <tr>
+          <th data-field="name_user">Nombre</th>
+          <th data-field="no_people">Numero de personas</th>
+          <th data-field="hour">Hora</th>
+          <th data-field="date">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
   </div>
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
+  var user_data = JSON.parse(localStorage.getItem("user_data"));
+  var business_data = JSON.parse(localStorage.getItem("business_data"));
   $('#calendar').fullCalendar({
     dayClick: function(date, jsEvent, view) {
-
-        console.log('Clicked on: ' + date.format());
-
-        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-        console.log('Current view: ' + view.name);
-
-        // change the day's background color just for fun
-        $(this).css('background-color', 'red');
+      var day = date.format().split('-');
+      //console.log(day);
+      var current_day = new Date(parseInt(day[0]), parseInt(day[1])-1, (parseInt(day[2])+1));
+      var last_day = new Date(parseInt(day[0]), parseInt(day[1])-1, parseInt(day[2]));
+      $('#table_reservations_place tbody').html('');
+      $.when(get_reservations_day(business_data._id, current_day, last_day)).done(function(json){
+        //console.log(json);
+        if(json.success){
+          $.each(json.reservations,function(index,value){
+            var date = new Date(value.date_reservation);
+            var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+            var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+            var var_append="";
+            var_append+='<tr data-id_reservation="'+value._id+'">'+
+                '<td data-id="'+value.place._id+'">'+value.user_responsible.name+" "+value.user_responsible.last_name_p+" "+value.user_responsible.last_name_m+'</td>'+
+                '<td>'+value.no_people+'</td>'+
+                '<td>'+time_reservation+'</td>'+
+                '<td>'+date_reservation+'</td>'+
+                '</tr>';
+            $('#table_reservations_place tbody').append(var_append);
+          });
+          if(json.reservations.length!=0){
+            Materialize.toast(json.msg, 3000, 'rounded green accent-4');
+          }
+        }else{
+          Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+        }
+      });
     },
     eventClick: function(calEvent, jsEvent, view) {
-
-        console.log('Event: ' + calEvent.title);
-        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-        console.log('View: ' + view.name);
-
-        // change the border color just for fun
-        $(this).css('border-color', 'blue');
-
+      console.log(calEvent);
+      console.log('Event: ' + calEvent.title);
+      console.log('View: ' + view.name);
+      // change the border color just for fun
+      //$(this).css('border-color', 'blue');
     },
     locale: "es",
     header: {
@@ -36,9 +66,71 @@ $(document).ready(function(){
         center: 'title',
         right: 'month,basicWeek'
     },
-    defaultView: 'month'
+    eventLimit: true,
+    defaultView: 'month',
+    allDayDefault: true,
+    viewRender: function (view, element) {
+      //console.log(view.calendar.getDate()._i);
+      var year = view.calendar.getDate()._i[0];
+      var month = view.calendar.getDate()._i[1];
+      var current_month = new Date(parseInt(year), parseInt(month)+1);
+      var last_month = new Date(parseInt(year), parseInt(month));
+      $.when(get_reservations_month(business_data._id, current_month, last_month)).done(function(json){
+        //console.log(json);
+        if(json.success){
+          $('#table_reservations_place tbody').html('');
+          var events = [];
+          $.each(json.reservations,function(index, value){
+            events.push({
+                title: value._id,
+                start: new Date(value.date_reservation), // will be parsed
+                //end: value.date_reservation,
+                //Duration: { days: 1 },
+                allDay: true
+            });
+            var date = new Date(value.date_reservation);
+            var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+            var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+            var var_append="";
+            var_append+='<tr data-id_reservation="'+value._id+'">'+
+                '<td data-id="'+value.place._id+'">'+value.user_responsible.name+" "+value.user_responsible.last_name_p+" "+value.user_responsible.last_name_m+'</td>'+
+                '<td>'+value.no_people+'</td>'+
+                '<td>'+time_reservation+'</td>'+
+                '<td>'+date_reservation+'</td>'+
+                '</tr>';
+            $('#table_reservations_place tbody').append(var_append);
+          });
+          if(json.reservations.length!=0){
+            Materialize.toast(json.msg, 3000, 'rounded green accent-4');
+          }
+        }else{
+          Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+        }
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', events);
+        $('#calendar').fullCalendar('rerenderEvents' );
+      });
+    },
   });
 });
+function get_reservations_month(place, current_month, last_month){
+  return $.ajax({
+    url: "http://localhost:3000/reservations/place/month",
+    method: "POST",
+    data: {
+      place: place, current_month: current_month, last_month: last_month
+    }
+  });
+}
+function get_reservations_day(place, current_day, last_day){
+  return $.ajax({
+    url: "http://localhost:3000/reservations/place/day",
+    method: "POST",
+    data: {
+      place: place, current_day: current_day, last_day: last_day
+    }
+  });
+}
 
 
 </script>

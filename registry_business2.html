@@ -127,7 +127,7 @@
 				<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
-	</div>	
+	</div>
 </div>
 <div class="row">
 		<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
@@ -172,7 +172,7 @@
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Negocio creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("business_data", JSON.stringify(json.business_data));
-						window.location="http://localhost/reservado/app/business_index.html";
+						window.location="app/business_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 					}

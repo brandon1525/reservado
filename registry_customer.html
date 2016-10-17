@@ -109,7 +109,7 @@
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Usuario creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("user_data", JSON.stringify(json.user_data));
-						window.location="http://localhost/reservado/app/customer_index.html";
+						window.location="app/customer_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);
 					}

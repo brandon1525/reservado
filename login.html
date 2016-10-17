@@ -41,10 +41,10 @@ $(document).ready(function(){
 					if(json.user_data.type_user==1){
 						localStorage.setItem("business_data", JSON.stringify(json.business_data));
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Inicio de sesión exitoso').show().fadeOut( 3000);
-						window.location="http://localhost/reservado/app/business_index.html";
+						window.location="app/business_index.html";
 					}else{
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Inicio de sesión exitoso').show().fadeOut( 3000);
-						window.location="http://localhost/reservado/app/customer_index.html";
+						window.location="app/customer_index.html";
 					}
 				}else{
 					$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html(json.msg).show().fadeOut( 3000);

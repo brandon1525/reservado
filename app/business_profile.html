@@ -10,8 +10,8 @@
         </div>
         <div class="input-field col m6 s12">
           <i class="material-icons prefix">phone</i>
-          <input id="icon_telephone" type="tel">
-          <label for="icon_telephone">Teléfono</label>
+          <input id="business_telephone" type="tel">
+          <label for="business_telephone">Teléfono</label>
         </div>
         <div class="input-field col m6 s12">
           <i class="material-icons prefix">face</i>
@@ -39,57 +39,111 @@
           </div>
         </div>
       </div>
-      <div class="input-field col m6 s12">
-        <i class="material-icons prefix">account_circle</i>
-        <input id="name_user" type="email" class="validate">
-        <label for="name_user">Correo</label>
-      </div>
-      <div class="input-field col m6 s12">
-        <i class="material-icons prefix">lock</i>
-        <input id="user_password" type="password">
-        <label for="user_password">Contraseña</label>
-      </div>
-    </div>
-  </div>
-  <h2 class="header center-align">Perfil del negocio</h2>
-  <div class="row">
-    <div class="col s12">
       <div class="row">
         <div class="input-field col m6 s12">
-          <i class="material-icons prefix">face</i>
-          <input id="name_business" type="text">
-          <label for="name_business">Nombre del negocio</label>
+          <i class="material-icons prefix">account_circle</i>
+          <input id="user" type="email" class="validate">
+          <label for="user">Correo</label>
         </div>
         <div class="input-field col m6 s12">
-          <i class="material-icons prefix">phone</i>
-          <input id="description_business" type="text">
-          <label for="description_business">Descripción</label>
+          <i class="material-icons prefix">lock</i>
+          <input id="user_password" type="password">
+          <label for="user_password">Contraseña</label>
         </div>
-        <div class="input-field col m6 s12">
-          <i class="material-icons prefix">face</i>
-          <input id="number_people" type="number">
-          <label for="number_people">Numero de personas</label>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_edit_profile"><i class="material-icons">edit</i></a>
         </div>
-        <div class="input-field col m6 s12">
-          <i class="material-icons prefix">face</i>
-          <input id="type_business" type="text">
-          <label for="type_business">Tipo de negocio</label>
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_save_profile" disabled><i class="material-icons">save</i></a>
         </div>
       </div>
     </div>
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){
-  var user_data;
-  var business_data;
+$(document).ready(function() {
+  load_info_user();
+  $('#btn_edit_profile').click(function(){
+    $('input').each(function(index,value){
+      $(value).attr('disabled',false);
+    });
+    $(this).attr('disabled',true);
+    $('#btn_save_profile').attr('disabled',false);
+  });
+
+  $('#btn_save_profile').click(function(){
+    var user_data = JSON.parse(localStorage.getItem("user_data"));
+    user_data['name']=$('#name_user').val();
+    user_data['last_name_p']=$('#last_name_p').val();
+    user_data['last_name_m']=$('#last_name_m').val();
+    user_data['phone']=$('#business_telephone').val();
+    user_data['sex'] = $('#sex_fem').is(':checked')? 'Femenino' : 'Masculino';
+    var date_b = $('#date_b').val().split('/');
+    var year = parseInt(date_b[2]);
+		var month = parseInt(date_b[1])-1;
+		var day = parseInt(date_b[0]);
+		date_b = new Date(year, month, day, 0, 0, 0, 0);
+    user_data['date_b'] = date_b;
+    user_data['user']=$('#user').val();
+    user_data['password']=$('#user_password').val();
+    console.log(user_data);
+    $.when(update_profile(user_data)).done(function(json){
+      if(json.success){
+        $('#btn_save_profile').attr('disabled',true);
+        $('#btn_edit_profile').attr('disabled',false);
+        localStorage.setItem("user_data", JSON.stringify(user_data));
+        $('#slide-out').find('.name').text(user_data.name);
+        $('#slide-out').find('.email').text(user_data.user);
+        $('input').each(function(index,value){
+          $(value).attr('disabled',true);
+        });
+        Materialize.toast(json.msg, 5000, 'rounded green accent-4');
+      }else{
+        Materialize.toast("No se pudo actualizar el usuario", 5000, 'rounded red accent-2');
+      }
+    });
+  });
+
+});
+
+function load_info_user(){
+  var user_data = JSON.parse(localStorage.getItem("user_data"));
   $('#date_b').pickadate({
     selectMonths: true,
     selectYears: 20,
     format: 'dd/mm/yyyy',
     today: 'Hoy',
     clear: 'Limpiar',
-    close: 'Cerrar'
+    close: 'Cerrar',
+    monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'],
+    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']
   });
-});
+  $('#name_user').val(user_data.name);
+  $('#business_telephone').val(user_data.phone);
+  $('#last_name_p').val(user_data.last_name_p);
+  $('#last_name_m').val(user_data.last_name_m);
+  var date_b = user_data.date_b.split('T')[0].split('-');
+  var picker = $('#date_b').pickadate('picker');
+  picker.set('select', [parseInt(date_b[0]), parseInt(date_b[1])-1, parseInt(date_b[2])])
+  $('#user').val(user_data.user);
+  if(user_data.sex=="Masculino"){
+    $('#sex_mas').click();
+  }else{
+    $('#sex_fem').click();
+  }
+  $('#name_user').attr('disabled', true);
+  $('#business_telephone').attr('disabled', true);
+  $('#last_name_p').attr('disabled', true);
+  $('#last_name_m').attr('disabled', true);
+  $('#date_b').attr('disabled', true);
+  $('#user').attr('disabled', true);
+  $('#sex_mas').attr('disabled', true);
+  $('#sex_fem').attr('disabled', true);
+  $('#user_password').attr('disabled', true);
+  Materialize.updateTextFields();
+}
 </script>

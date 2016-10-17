@@ -65,6 +65,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
   load_info_user();
+
   $('#btn_edit_profile').click(function(){
     $('input').each(function(index,value){
       $(value).attr('disabled',false);
@@ -72,6 +73,7 @@ $(document).ready(function() {
     $(this).attr('disabled',true);
     $('#btn_save_profile').attr('disabled',false);
   });
+
   $('#btn_save_profile').click(function(){
     var user_data = JSON.parse(localStorage.getItem("user_data"));
     user_data['name']=$('#name_user').val();
@@ -79,9 +81,15 @@ $(document).ready(function() {
     user_data['last_name_m']=$('#last_name_m').val();
     user_data['phone']=$('#telephone_user').val();
     user_data['sex'] = $('#sex_fem').is(':checked')? 'Femenino' : 'Masculino';
-    user_data['date_b']=$('#date_b').val();
+    var date_b = $('#date_b').val().split('/');
+    var year = parseInt(date_b[2]);
+		var month = parseInt(date_b[1])-1;
+		var day = parseInt(date_b[0]);
+		date_b = new Date(year, month, day, 0, 0, 0, 0);
+    user_data['date_b'] = date_b;
     user_data['user']=$('#user').val();
     user_data['password']=$('#user_password').val();
+    console.log(user_data);
     $.when(update_profile(user_data)).done(function(json){
       if(json.success){
         $('#btn_save_profile').attr('disabled',true);
@@ -100,16 +108,20 @@ $(document).ready(function() {
   });
 
 });
+
 function load_info_user(){
   var user_data = JSON.parse(localStorage.getItem("user_data"));
-  //console.log(user_data);
   $('#date_b').pickadate({
     selectMonths: true,
     selectYears: 20,
     format: 'dd/mm/yyyy',
     today: 'Hoy',
     clear: 'Limpiar',
-    close: 'Cerrar'
+    close: 'Cerrar',
+    monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'],
+    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']
   });
   $('#name_user').val(user_data.name);
   $('#telephone_user').val(user_data.phone);
@@ -118,7 +130,6 @@ function load_info_user(){
   var date_b = user_data.date_b.split('T')[0].split('-');
   var picker = $('#date_b').pickadate('picker');
   picker.set('select', [parseInt(date_b[0]), parseInt(date_b[1])-1, parseInt(date_b[2])])
-  //$('#date_b').val(date_b);
   $('#user').val(user_data.user);
   if(user_data.sex=="Masculino"){
     $('#sex_mas').click();
@@ -135,15 +146,5 @@ function load_info_user(){
   $('#sex_fem').attr('disabled', true);
   $('#user_password').attr('disabled', true);
   Materialize.updateTextFields();
-}
-function update_profile(user_data){
-  return $.ajax({
-    url: "http://localhost:3000/user/"+user_data.id+"",
-    method: "PUT",
-    data: {
-      name: user_data.name, last_name_p: user_data.last_name_p, last_name_m: user_data.last_name_m, phone: user_data.phone,
-      sex: user_data.sex, date_b: user_data.date_b, user: user_data.user, password: user_data.password
-    }
-  });
 }
 </script>

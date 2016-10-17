@@ -1,0 +1,396 @@
+<style media="screen">
+.type_plan{
+  border: 1px solid #000;
+  padding: 50px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.type_plan.active{
+  border: 5px solid #00BCD4;
+  padding: 50px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+</style>
+<div class="col s12">
+  <h2 class="header center-align">Perfil del establecimeinto</h2>
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">store</i>
+          <input id="name_business" type="text">
+          <label for="name_business">Nombre del negocio</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <i class="material-icons prefix">people</i>
+          <input id="total_people" type="number">
+          <label for="total_people">Numero de personas</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">description</i>
+          <textarea id="description_business" class="materialize-textarea"></textarea>
+          <label for="description_business">Descripción</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <select id="type_business">
+            <option value="" disabled selected>Tipo de negocio</option>
+            <option value="Antro">Antro</option>
+            <option value="Bar">Bar</option>
+            <option value="Café">Café</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <label>Tipo de negocio</label>
+        </div>
+        <div class="input-field col m6 s12" style="display: none;">
+          <i class="material-icons prefix">edit</i>
+          <input id="text_type_business" type="text">
+          <label for="text_type_business">Tipo de negocio</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col m6 s12">
+          <div class="type_plan">
+            <h3 class="center-align">Básico</h3>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Administrador de reservaciones
+            </p>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Dashboard
+            </p>
+            <p>
+              <i class="material-icons orange-text text-darken-2">star_border</i> Asistencia personalizada
+            </p>
+            <p>
+              <i class="material-icons orange-text text-darken-2">star_border</i> Promoción en nuestra pagina pricipal
+            </p>
+          </div>
+        </div>
+        <div class="col m6 s12">
+          <div class="type_plan">
+            <h3 class="center-align">Premium</h3>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Administrador de reservaciones
+            </p>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Dashboard
+            </p>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Asistencia personalizada
+            </p>
+            <p>
+              <i class="material-icons yellow-text text-darken-2">star</i> Promoción en nuestra pagina pricipal
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row valign-wrapper">
+        <div class="col s3">
+          <img class="valign responsive-img" src="" alt="" id="image_credit"/>
+        </div>
+        <div class="input-field col s9">
+          <i class="material-icons prefix">credit_card</i>
+          <input id="number_card" type="text" class="validate">
+          <label for="number_card" data-error="Tarjeta de crédito inválida" data-success="Válida">Numero de tarjeta</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">credit_card</i>
+          <input id="cvv_card" type="number" class="validate" min="100" max="999">
+          <label for="cvv_card">CVV</label>
+        </div>
+        <div class="input-field col s6">
+          <i class="material-icons prefix">credit_card</i>
+          <input id="date_card" type="text">
+          <label for="date_card">Fecha de vencimiento</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_edit_place"><i class="material-icons">edit</i></a>
+        </div>
+        <div class="col s6">
+          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_save_place" disabled=""><i class="material-icons">save</i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+  load_info_place();
+  $('#type_business').material_select();
+  $('#type_business').change(function() {
+    if($(this).val()=="Otro"){
+      $('#text_type_business').closest('.col').show();
+    }else{
+      $('#text_type_business').val('');
+      $('#text_type_business').closest('.col').hide();
+    }
+  });
+  $('.type_plan').click(function(){
+    if($('#btn_edit_place').attr('disabled')){
+      $('.type_plan').each(function(index, value){
+        $(value).removeClass('active');
+      });
+      $(this).addClass('active');
+    }
+  });
+  $('#btn_edit_place').click(function(){
+    $('input').each(function(index,value){
+      $(value).attr('disabled',false);
+    });
+    $('#description_business').attr('disabled',false);
+    $('#type_business').attr('disabled',false).material_select();
+    $(this).attr('disabled',true);
+    $('#btn_save_place').attr('disabled',false);
+  });
+  $('#btn_save_place').click(function(){
+    var user_data = JSON.parse(localStorage.getItem("user_data"));
+    var business_data = JSON.parse(localStorage.getItem("business_data"));
+    business_data['name'] = $('#name_business').val();
+    business_data['total_people'] = parseInt($('#total_people').val());
+    business_data['description'] = $('#description_business').val();
+    //business_data[''] = $('#type_business').val();
+    var type = $('#type_business').find('option:selected').text();
+    if($('#type_business').find('option:selected').text()=="Otro"){
+      type = $('#text_type_business').val();
+    }
+    business_data['type_plan'] = $('.type_plan').index($('.type_plan.active'));
+    business_data['type'] = type;
+    var payment_method = {
+      number_card : $('#number_card').val(),
+      cvv : $('#cvv_card').val(),
+      date : $('#date_card').val()
+    }
+    business_data['payment_method'] = payment_method;
+    console.log(user_data);
+    console.log(business_data);
+    $.when(update_place(business_data)).done(function(json){
+      if(json.success){
+        $('#btn_save_place').attr('disabled',true);
+        $('#btn_edit_place').attr('disabled',false);
+        localStorage.setItem("user_data", JSON.stringify(user_data));
+        localStorage.setItem("business_data", JSON.stringify(business_data));
+        $('input').each(function(index,value){
+          $(value).attr('disabled',true);
+          $('#description_business').attr('disabled',true);
+          $('#type_business').attr('disabled',true).material_select();
+        });
+        Materialize.toast(json.msg, 5000, 'rounded green accent-4');
+      }else{
+        Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+      }
+    });
+  });
+  Materialize.updateTextFields();
+  var creditcards = {
+    list:[
+      {
+        brand:          'American Express',
+        image:          'img/creditcards/american-express.png',
+        verification:   '^3[47][0-9]',
+        separation:     '^([0-9]{4})([0-9]{6})?(?:([0-9]{6})([0-9]{5}))?$',
+        hidden:         '**** ****** *[0-9][0-9][0-9][0-9]',
+        accepted:       true,
+        length:         15
+      },
+      {
+        brand:          'MasterCard',
+        image:          'img/creditcards/mastercard.png',
+        verification:   '^5[1-5][0-9]',
+        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+        accepted:       true,
+        length:         16
+      },
+      {
+        brand:          'Visa',
+        image:          'img/creditcards/visa.png',
+        verification:   '^4[0-9]',
+        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+        accepted:       true,
+        length:         16
+      },
+      {
+        brand:          'Discover',
+        image:          'img/creditcards/discover.png',
+        verification:   '^4(?:011|5[0-9]{2})[0-9]',
+        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+        accepted:       false,
+        length:         16
+      },
+      {
+        brand:          'JCB',
+        image:          'img/creditcards/jcb.png',
+        verification:   '^(?:2131|1800|35[0-9]{3})[0-9]',
+        separation:     '^([0-9]{4})([0-9]{4})?([0-9]{4})?([0-9]{4})?$',
+        hidden:         '**** **** **** [0-9][0-9][0-9][0-9]',
+        accepted:       false,
+        length:         16
+      }
+    ],
+    active:null
+  };
+
+
+  //On Keydown
+  $('#number_card').keydown(function(e){
+    -1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()
+    var card = $(this).val().replace(/[^0-9]/g,''),
+    trim = $.trim( $(this).val().slice(0,-1) );
+    for( var i=0; i<creditcards.list.length; i++ ){
+      if(card.match( new RegExp(creditcards.list[i].verification) )){
+        creditcards.active = i;
+        if( $(this).next('img').length == 0 ){
+          $(this).next('small').remove();
+          $("#image_credit").attr("src",creditcards.list[i].image);
+          $("#image_credit").attr("alt",creditcards.list[i].brand);
+          $("#image_credit").show();
+        }
+        if( !creditcards.list[i].accepted && $(this).nextAll('small').length == 0 ){
+          $('#image_credit').hide();
+          $(this).next('img').after('<small style="margin-left:5px; color:#F00;">'+'Tarjeta de crédito no aceptada'+'</small>');
+        }
+        break;
+      }
+    }
+    if( creditcards.active == null && card.length > 4 && $(this).nextAll('small').length == 0 ){
+      $('#image_credit').hide();
+      $(this).after('<small style="margin-left:5px; color:#F00;">'+'Tarjeta de crédito inválida'+'</small>');
+    }
+    key = creditcards.active !== null? creditcards.active : 1 ;
+    if( e.keyCode == 8 && trim != $(this).val().slice(0,-1) ){
+      $(this).val( trim );
+      e.preventDefault();
+      return;
+    }
+    if( card.length >= creditcards.list[ key ].length && $.inArray(e.keyCode, [37, 38, 39, 40, 46, 8, 9, 27, 13, 110, 190]) === -1 && !e.metaKey && !e.ctrlKey ){
+      e.preventDefault();
+      return;
+    }
+    if( new RegExp(creditcards.list[ key ].separation).exec( card ) && e.keyCode >= 48 && e.keyCode <= 57 ){
+      $(this).val( $(this).val() + ' ' );
+    }
+    return;
+  });
+  $('#number_card').keyup(function(e){
+    var card = $(this).val().replace(/[^0-9]/,'');
+    if( creditcards.active !== null && !card.match( new RegExp(creditcards.list[ creditcards.active ].verification) ) ){
+      $(this).nextAll('small').remove();
+      $('#image_credit').hide();
+      creditcards.active = null;
+    }else
+    if( card.length < 4 ){
+      $(this).next('small').remove();
+    }
+  });
+  $('#number_card').on('paste',function(e){
+    var el    = this;
+    setTimeout(function(){
+      var card = $(el).val().replace(/[^0-9]/g,'');
+      $(el).val( card );
+      var e = jQuery.Event('keydown',{
+        which:    37,
+        keyCode:  37
+      });
+      $(el).trigger(e).promise().done(function(e){
+        key = creditcards.active !== null? creditcards.active : 1 ;
+        card.substr( 0 , creditcards.list[ key ].length );
+        var separation  = new RegExp(creditcards.list[ key ].separation).exec( card ),
+        storage     = '';
+        while( !separation && card.length > 1 ){
+          storage     = card.charAt( card.length - 1 );
+          card        = card.slice(0,-1);
+          separation  = new RegExp(creditcards.list[ key ].separation).exec( card );
+        }
+        if( separation ){
+          var separated = [];
+          for( var i=0; i<separation.length; i++){
+            if( typeof separation[i] != 'undefined' ) separated.push( separation[i] );
+          }
+          var string = separated.slice(1).join(' ') + (storage!=''? ' '+storage : '' )
+          $(el).val( string )
+        }
+      });
+    },0);
+  });
+});
+function load_info_place(){
+  var user_data = JSON.parse(localStorage.getItem("user_data"));
+  var business_data = JSON.parse(localStorage.getItem("business_data"));
+  $('#name_business').val(business_data.name);
+  $('#total_people').val(business_data.total_people);
+  $('#description_business').val(business_data.description);
+  var types_places = ["Antro", "Bar", "Café", "Restaurant"];
+  if($.inArray( business_data.type, types_places)!=-1){
+    $('#type_business').val(business_data.type);
+  }else{
+    $('#type_business').val("Otro");
+    $('#text_type_business').show();
+    $('#text_type_business').val(business_data.type);
+  }
+  $('.type_plan').eq(business_data.type_plan).addClass('active');
+  $('#number_card').val(business_data.payment_method.number_card);
+  $('#cvv_card').val(business_data.payment_method.cvv);
+  $('#date_card').val(business_data.payment_method.date);
+  $('#name_business').attr('disabled', true);
+  $('#total_people').attr('disabled', true);
+  $('#description_business').attr('disabled', true);
+  $('#type_business').attr('disabled', true);
+  $('#text_type_business').attr('disabled', true);
+  $('#number_card').attr('disabled', true);
+  $('#cvv_card').attr('disabled', true);
+  $('#date_card').attr('disabled', true);
+  Materialize.updateTextFields();
+  console.log(business_data);
+}
+
+function update_place(business_data){
+  return $.ajax({
+    url: "http://localhost:3000/place/"+business_data._id+"",
+    method: "PUT",
+    data: {
+      name: business_data.name, description: business_data.description, total_people: business_data.total_people,
+      type: business_data.type, payment_method: business_data.payment_method, type_plan: business_data.type_plan
+    }
+  });
+}
+
+/*Amex Card: ^3[47][0-9]{13}$
+BCGlobal: ^(6541|6556)[0-9]{12}$
+Carte Blanche Card: ^389[0-9]{11}$
+Diners Club Card: ^3(?:0[0-5]|[68][0-9])[0-9]{11}$
+Discover Card: ^65[4-9][0-9]{13}|64[4-9][0-9]{13}|6011[0-9]{12}|(622(?:12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|9[01][0-9]|92[0-5])[0-9]{10})$
+Insta Payment Card: ^63[7-9][0-9]{13}$
+JCB Card: ^(?:2131|1800|35\d{3})\d{11}$
+KoreanLocalCard: ^9[0-9]{15}$
+Laser Card: ^(6304|6706|6709|6771)[0-9]{12,15}$
+Maestro Card: ^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$
+Mastercard: ^5[1-5][0-9]{14}$
+Solo Card: ^(6334|6767)[0-9]{12}|(6334|6767)[0-9]{14}|(6334|6767)[0-9]{15}$
+Switch Card: ^(4903|4905|4911|4936|6333|6759)[0-9]{12}|(4903|4905|4911|4936|6333|6759)[0-9]{14}|(4903|4905|4911|4936|6333|6759)[0-9]{15}|564182[0-9]{10}|564182[0-9]{12}|564182[0-9]{13}|633110[0-9]{10}|633110[0-9]{12}|633110[0-9]{13}$
+Union Pay Card: ^(62[0-9]{14,17})$
+Visa Card: ^4[0-9]{12}(?:[0-9]{3})?$
+Visa Master Card: ^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})$*/
+
+/*payment_method : {
+number_card : {
+type : String
+},
+cvv : {
+type : String
+},
+date : {
+type : String
+}
+},
+type_plan : {
+type : Number,
+default : 0
+},*/
+</script>

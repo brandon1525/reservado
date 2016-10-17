@@ -3,7 +3,7 @@
   cursor: pointer;
 }
 .type_plan.active{
-  border: 5px solid #00BCD4;
+  border: 2px solid rgb(255, 179, 179);
   cursor: pointer;
 }
 </style>
@@ -53,10 +53,8 @@
 		</div>
 	</div>
 	<div class="row">
-	   <div class="col-md-3">
-	   </div>
-	   <div class="col-md-3 type_plan">
-	      <div class="panel panel-danger">
+	   <div class="col-xs-offset-3 col-xs-3">
+	      <div class="panel panel-danger type_plan">
 	         <div class="panel-heading">
 	            <h3 class="text-center">PLAN NORMAL</h3>
 	         </div>
@@ -79,8 +77,8 @@
 	         </ul>
 	      </div>
 	   </div>
-	   <div class="col-md-3 type_plan">
-	      <div class="panel panel-danger tipe">
+	   <div class="col-xs-3">
+	      <div class="panel panel-danger type_plan">
 	         <div class="panel-heading">
 	            <h3 class="text-center">PLAN PREMIUM</h3>
 	         </div>
@@ -103,8 +101,6 @@
 	         </ul>
 	      </div>
 	   </div>
-	   <div class="col-md-3">
-	   </div>
 </div>
 <div class="row">
 	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
@@ -125,28 +121,17 @@
 				<input class="form-control input-lg" type="text" id="card_month" placeholder="MM" />
 			</div>
 		</div>
-		<div class="horizontal">
+		<div class="form-horizontal">
 			<div class="form-group has-feedback">
 				<label class="control-label" for="card_year">YY</label>
 				<input class="form-control input-lg" type="text" id="card_year" placeholder="YY" />
 			</div>
 		</div>
-		<div class="horizontal">
+		<div class="form-horizontal">
 			<div class="form-group has-feedback">
 				<label class="control-label" for="card_ccv">CCV</label>
 				<input class="form-control input-lg" type="text" id="card_ccv" placeholder="CCV" />
 				<span class="fa fa-credit-card-alt form-control-feedback" aria-hidden="true"></span>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
-		<div class="form-horizontal">
-			<div class="form-group has-feedback">
-				<label class="control-label" for="card_name">Nombre en la tarjeta</label>
-				<input class="form-control input-lg" type="text" id="card_name" placeholder="Nombre en la tarjeta" />
-				<span class="fa fa-user form-control-feedback" aria-hidden="true"></span>
 			</div>
 		</div>
 	</div>
@@ -159,15 +144,11 @@
 </div>
 <script>
 	$(document).ready(function(){
-		var PLAN="Q";
-		console.log(PLAN);
 		$('.type_plan').click(function(){
 			$('.type_plan').each(function(index, value){
-        		$(value).removeClass('active');
-        	});
-      		$(this).addClass('active');
-      		PLAN=$('.type_plan').index($('.type_plan.active'));
-      		console.log(PLAN);
+        $(value).removeClass('active');
+      });
+      $(this).addClass('active');
 		});
 		$('.type_plan').index($('.type_plan.active'));
 		$('#type').selectpicker();
@@ -190,11 +171,15 @@
 			if($('#type').find('option:selected').text()=="Otro"){
 				type = $('#other_type').val();
 			}
-			var date=$('#card_month').val()+"/"+$('card_year');
-			var payment_method ={number_card:$('#card_number'),cvv:$('#card_ccv'),date:date}
+			var date=$('#card_month').val()+"/"+$('#card_year').val();
+      var type_plan = $('.type_plan').index($('.type_plan.active'));
+			var payment_method = {};
+      var number_card = $('#card_number').val();
+      var cvv = $('#card_ccv').val();
+      var date = date;
 			var owner = JSON.parse(localStorage.getItem('user_data')).id;
 			if(validate_form()){
-				$.when(registry_business2(name, description, total_people, type, owner, PLAN, payment_method)).done(function(json){
+				$.when(registry_business2(name, description, total_people, type, owner, type_plan, number_card, cvv, date)).done(function(json){
 					if(json.success){
 						$('#alert_msg').removeClass('alert-danger').addClass('alert-success').html('Negocio creado con éxito').show().fadeOut( 3000);
 						localStorage.setItem("business_data", JSON.stringify(json.business_data));
@@ -245,18 +230,19 @@
 				return false;
 			}
 		}
-		if (PLAN=="Q") {
-			$('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Selecciona un tipo de plan').show().fadeOut( 3000);
+		if ($('.type_plan.active').length==0) {
+      $('#alert_msg').removeClass('alert-success').addClass('alert-danger').html('Selecciona un tipo de plan').show().fadeOut( 3000);
 			return false;
 		}
 		return validate;
 	}
-	function registry_business2(name, description, total_people, type, owner){
+	function registry_business2(name, description, total_people, type, owner, type_plan, number_card, cvv, date){
 		return $.ajax({
 			url: "http://localhost:3000/place",
 			method: "POST",
 			data: {
-				name: name, description: description, total_people: total_people, type: type, owner: owner
+				name: name, description: description, total_people: total_people, type: type, owner: owner,
+        type_plan: type_plan, number_card: number_card, cvv: cvv, date: date
 			}
 		});
 	}

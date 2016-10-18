@@ -54,9 +54,9 @@ $(document).ready(function(){
       });
     },
     eventClick: function(calEvent, jsEvent, view) {
-      console.log(calEvent);
-      console.log('Event: ' + calEvent.title);
-      console.log('View: ' + view.name);
+    //  console.log(calEvent);
+    //  console.log('Event: ' + calEvent.title);
+    //  console.log('View: ' + view.name);
       // change the border color just for fun
       //$(this).css('border-color', 'blue');
     },
@@ -76,29 +76,36 @@ $(document).ready(function(){
       var current_month = new Date(parseInt(year), parseInt(month)+1);
       var last_month = new Date(parseInt(year), parseInt(month));
       $.when(get_reservations_month(business_data._id, current_month, last_month)).done(function(json){
-        //console.log(json);
+      //  console.log(json);
         if(json.success){
           $('#table_reservations_place tbody').html('');
           var events = [];
           $.each(json.reservations,function(index, value){
+          //  console.log(index);
+            var count = 0;
+            $.each(value,function(index, reservation){
+              count++;
+            //  console.log(events);
+              var date = new Date(reservation.date_reservation);
+              var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+              var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+              var var_append="";
+              var_append+='<tr data-id_reservation="'+reservation._id+'">'+
+                  '<td data-id="'+reservation.place._id+'">'+reservation.user_responsible.name+" "+reservation.user_responsible.last_name_p+" "+reservation.user_responsible.last_name_m+'</td>'+
+                  '<td>'+reservation.no_people+'</td>'+
+                  '<td>'+time_reservation+'</td>'+
+                  '<td>'+date_reservation+'</td>'+
+                  '</tr>';
+              $('#table_reservations_place tbody').append(var_append);
+            });
+            var dia = index.split('/');
             events.push({
-                title: value._id,
-                start: new Date(value.date_reservation), // will be parsed
+                title: count,
+                start: new Date(dia[0],dia[1],dia[2]), // will be parsed
                 //end: value.date_reservation,
                 //Duration: { days: 1 },
                 allDay: true
             });
-            var date = new Date(value.date_reservation);
-            var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
-            var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
-            var var_append="";
-            var_append+='<tr data-id_reservation="'+value._id+'">'+
-                '<td data-id="'+value.place._id+'">'+value.user_responsible.name+" "+value.user_responsible.last_name_p+" "+value.user_responsible.last_name_m+'</td>'+
-                '<td>'+value.no_people+'</td>'+
-                '<td>'+time_reservation+'</td>'+
-                '<td>'+date_reservation+'</td>'+
-                '</tr>';
-            $('#table_reservations_place tbody').append(var_append);
           });
           if(json.reservations.length!=0){
             Materialize.toast(json.msg, 3000, 'rounded green accent-4');

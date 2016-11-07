@@ -32,6 +32,7 @@ $(document).ready(function(){
   });
 });
 $(document).off('click','.place_link').on('click','.place_link',function() {
+  $('.navbar-toggle').click();
   $('#contenido_change').empty().load($(this).find('a').data('href'));
 });
 $(window).scroll(function () {

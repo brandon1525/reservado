@@ -6,7 +6,7 @@
   margin-bottom: 10px;
 }
 .type_plan.active{
-  border: 5px solid #00BCD4;
+  border: 2px solid #e91e63;
   padding: 50px;
   cursor: pointer;
   margin-bottom: 10px;
@@ -109,10 +109,10 @@
       </div>
       <div class="row">
         <div class="col s6">
-          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_edit_place"><i class="material-icons">edit</i></a>
+          <a class="btn-floating btn-large waves-effect waves-light pink" id="btn_edit_place"><i class="material-icons">edit</i></a>
         </div>
         <div class="col s6">
-          <a class="btn-floating btn-large waves-effect waves-light red" id="btn_save_place" disabled=""><i class="material-icons">save</i></a>
+          <a class="btn-floating btn-large waves-effect waves-light pink" id="btn_save_place" disabled=""><i class="material-icons">save</i></a>
         </div>
       </div>
     </div>
@@ -198,40 +198,42 @@ $(document).ready(function() {
     $('#btn_save_place').attr('disabled',false);
   });
   $('#btn_save_place').click(function(){
-    var user_data = JSON.parse(localStorage.getItem("user_data"));
-    var business_data = JSON.parse(localStorage.getItem("business_data"));
-    business_data['name'] = $('#name_business').val();
-    business_data['total_people'] = parseInt($('#total_people').val());
-    business_data['description'] = $('#description_business').val();
-    //business_data[''] = $('#type_business').val();
-    var type = $('#type_business').find('option:selected').text();
-    if($('#type_business').find('option:selected').text()=="Otro"){
-      type = $('#text_type_business').val();
-    }
-    business_data['type_plan'] = $('.type_plan').index($('.type_plan.active'));
-    business_data['type'] = type;
-    var payment_method = {
-      number_card : $('#number_card').val(),
-      cvv : $('#cvv_card').val(),
-      date : $('#date_card').val()
-    }
-    business_data['payment_method'] = payment_method;
-    $.when(update_place(business_data)).done(function(json){
-      if(json.success){
-        $('#btn_save_place').attr('disabled',true);
-        $('#btn_edit_place').attr('disabled',false);
-        localStorage.setItem("user_data", JSON.stringify(user_data));
-        localStorage.setItem("business_data", JSON.stringify(business_data));
-        $('input').each(function(index,value){
-          $(value).attr('disabled',true);
-          $('#description_business').attr('disabled',true);
-          $('#type_business').attr('disabled',true).material_select();
-        });
-        Materialize.toast(json.msg, 5000, 'rounded green accent-4');
-      }else{
-        Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+    if($(this).attr('disabled')!="disabled"){
+      var user_data = JSON.parse(localStorage.getItem("user_data"));
+      var business_data = JSON.parse(localStorage.getItem("business_data"));
+      business_data['name'] = $('#name_business').val();
+      business_data['total_people'] = parseInt($('#total_people').val());
+      business_data['description'] = $('#description_business').val();
+      //business_data[''] = $('#type_business').val();
+      var type = $('#type_business').find('option:selected').text();
+      if($('#type_business').find('option:selected').text()=="Otro"){
+        type = $('#text_type_business').val();
       }
-    });
+      business_data['type_plan'] = $('.type_plan').index($('.type_plan.active'));
+      business_data['type'] = type;
+      var payment_method = {
+        number_card : $('#number_card').val(),
+        cvv : $('#cvv_card').val(),
+        date : $('#date_card').val()
+      };
+      business_data['payment_method'] = payment_method;
+      $.when(update_place(business_data)).done(function(json){
+        if(json.success){
+          $('#btn_save_place').attr('disabled',true);
+          $('#btn_edit_place').attr('disabled',false);
+          localStorage.setItem("user_data", JSON.stringify(user_data));
+          localStorage.setItem("business_data", JSON.stringify(business_data));
+          $('input').each(function(index,value){
+            $(value).attr('disabled',true);
+            $('#description_business').attr('disabled',true);
+            $('#type_business').attr('disabled',true).material_select();
+          });
+          Materialize.toast(json.msg, 5000, 'rounded green accent-4');
+        }else{
+          Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+        }
+      });
+    }
   });
   Materialize.updateTextFields();
   //On Keydown
@@ -373,7 +375,8 @@ function update_place(business_data){
     method: "PUT",
     data: {
       name: business_data.name, description: business_data.description, total_people: business_data.total_people,
-      type: business_data.type, payment_method: business_data.payment_method, type_plan: business_data.type_plan
+      type: business_data.type, number_card: business_data.payment_method.number_card, cvv: business_data.payment_method.cvv,
+      date: business_data.payment_method.date, type_plan: business_data.type_plan
     }
   });
 }

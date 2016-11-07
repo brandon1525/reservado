@@ -1,0 +1,285 @@
+<div class="col s12">
+  <h2 class="header center-align">Reservaciones</h2>
+  <h3>Indicadores inmediatos</h3>
+  <div class="row">
+    <div class="col s12 m6">
+      <div class="card-panel pink valign-wrapper">
+        <span class="white-text valign">
+          28 Reservaciones este mes
+        </span>
+      </div>
+    </div>
+    <div class="col s12 m6">
+      <div class="card-panel pink valign-wrapper">
+        <span class="white-text valign">
+          4 Personas por reservación
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <ul id="tabs_indicators" class="tabs">
+        <li class="tab"><a class="pink-text text-accent-2 active" href="#chart_realtime">Reservaciones tiempo real</a></li>
+        <li class="tab"><a class="pink-text text-accent-2" href="#chart_per_hour">Reservaciones por hora</a></li>
+      </ul>
+    </div>
+    <div id="chart_realtime" class="col s12">
+      <div class="chart_div" id="chart_chart_realtime" style="width: 100%;"></div>
+    </div>
+    <div id="chart_per_hour" class="col s12" style="width: 100%;">
+      <div class="chart_div" id="chart_chart_per_hour"></div>
+    </div>
+  </div>
+  <h3>Indicadores históricos</h3>
+  <div class="row">
+    <div class="col s12">
+      <ul id="tabs_historic" class="tabs">
+        <li class="tab"><a class="pink-text text-accent-2 active" href="#chart_tendency">Tendencia de reservaciones por mes</a></li>
+        <li class="tab"><a class="pink-text text-accent-2" href="#chart_drill">Reservaciones por dias y horas</a></li>
+      </ul>
+    </div>
+    <div id="chart_tendency" class="col s12">
+      <div class="chart_div" id="chart_chart_tendency" style="width: 100%;"></div>
+    </div>
+    <div id="chart_drill" class="col s12" style="width: 100%;">
+      <div class="chart_div" id="chart_chart_drill"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#tabs_indicators .tab a').click(function(){
+    var chart = $($(this).attr('href')).find('.chart_div').first();
+    setTimeout(function () {
+      $(chart).highcharts().reflow();
+    }, 10);
+  });
+  $('#tabs_indicators').tabs();
+
+  $('#tabs_historic .tab a').click(function(){
+    var chart = $($(this).attr('href')).find('.chart_div').first();
+    setTimeout(function () {
+      $(chart).highcharts().reflow();
+    }, 10);
+  });
+  $('#tabs_historic').tabs();
+
+  $('#chart_chart_tendency').highcharts({
+    xAxis: {
+      min: -0.5,
+      max: 5.5
+    },
+    yAxis: {
+      min: 0
+    },
+    title: {
+      text: 'Tendencia de reservaciones por mes'
+    },
+    series: [{
+      type: 'line',
+      name: 'Regression Line',
+      data: [[0, 1.11], [5, 4.51]],
+      marker: {
+        enabled: false
+      },
+      states: {
+        hover: {
+          lineWidth: 0
+        }
+      },
+      enableMouseTracking: false
+    }, {
+      type: 'scatter',
+      name: 'Observations',
+      data: [1, 1.5, 2.8, 3.5, 3.9, 4.2],
+      marker: {
+        radius: 4
+      }
+    }]
+  });
+
+  $('#chart_chart_realtime').highcharts({
+    title: {
+      text: 'Reservaciones en tiempo real',
+      x: -20 //center
+    },
+    yAxis: {
+      title: {
+        text: 'No reservaciones'
+      },
+      plotLines: [{
+        value: 0,
+        width: 1,
+        color: '#808080'
+      }]
+    },
+    plotOptions: {
+      series: {
+        color: '#e91e63'
+      }
+    },
+    tooltip: {
+      valueSuffix: '°C'
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0
+    },
+    series: [{
+      name: 'Reservaciones',
+      data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+    }]
+  });
+
+  $('#chart_chart_per_hour').highcharts({
+
+    chart: {
+      polar: true
+    },
+
+    title: {
+      text: 'Distribución de reservaciones por hora'
+    },
+
+    pane: {
+      startAngle: 0,
+      endAngle: 360
+    },
+
+    xAxis: {
+      tickInterval: 1,
+      min: 0,
+      max: 12,
+      labels: {
+        formatter: function () {
+          return this.value + ':00';
+        }
+      }
+    },
+
+    yAxis: {
+      min: 0
+    },
+
+    plotOptions: {
+      series: {
+        pointStart: 0,
+        pointInterval: 1
+      }
+    },
+
+    series: [
+      {
+        type: 'line',
+        name: 'Highlines de reservaciones',
+        data: [1, 2, 3, 4, 5, 6, 17, 8]
+      },
+      {
+        type: 'area',
+        name: 'Concentrado de reservaciones',
+        data: [1, 8, 2, 7, 3, 6, 4, 5]
+      }
+    ]
+  });
+  $('#chart_chart_drill').highcharts({
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Resumen de reservaciones'
+    },
+    xAxis: {
+      type: 'category'
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      series: {
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    series: [{
+      name: 'Things',
+      colorByPoint: true,
+      data: [
+        {
+          name: '2014',
+          y: 5,
+          drilldown: 'data_2014'
+        },
+        {
+          name: '2015',
+          y: 2,
+          drilldown: 'data_2015'
+        },
+        {
+          name: '2016',
+          y: 4,
+          drilldown: 'data_2016'
+        }
+      ]
+    }],
+    drilldown: {
+      series: [{
+        id: 'data_2014',
+        data: [
+          {name: 'Enero', y: 4, drilldown: 'data_2014_Enero'},
+          {name: 'Febrero', y: 2, drilldown: 'data_2014_Febrero'},
+          {name: 'Marzo', y: 1, drilldown: 'data_2014_Marzo'},
+          {name: 'Abril', y: 2, drilldown: 'data_2014_Abril'},
+          {name: 'Mayo', y: 1, drilldown: 'data_2014_Mayo'},
+          {name: 'Junio', y: 4, drilldown: 'data_2014_Junio'},
+          {name: 'Julio', y: 2, drilldown: 'data_2014_Julio'},
+          {name: 'Agosto', y: 1, drilldown: 'data_2014_Agosto'},
+          {name: 'Septiembre', y: 2, drilldown: 'data_2014_Septiembre'},
+          {name: 'Octubre', y: 1, drilldown: 'data_2014_Octubre'},
+          {name: 'Noviembre', y: 2, drilldown: 'data_2014_Noviembre'},
+          {name: 'Diciembre', y: 1, drilldown: 'data_2014_Diciembre'}
+        ]
+      },
+      {
+        id: 'data_2015',
+        data: [
+          {name: 'Enero', y: 4, drilldown: 'data_2015_Enero'},
+          {name: 'Febrero', y: 2, drilldown: 'data_2015_Febrero'},
+          {name: 'Marzo', y: 1, drilldown: 'data_2015_Marzo'},
+          {name: 'Abril', y: 2, drilldown: 'data_2015_Abril'},
+          {name: 'Mayo', y: 1, drilldown: 'data_2015_Mayo'},
+          {name: 'Junio', y: 4, drilldown: 'data_2015_Junio'},
+          {name: 'Julio', y: 2, drilldown: 'data_2015_Julio'},
+          {name: 'Agosto', y: 1, drilldown: 'data_2015_Agosto'},
+          {name: 'Septiembre', y: 2, drilldown: 'data_2015_Septiembre'},
+          {name: 'Octubre', y: 1, drilldown: 'data_2015_Octubre'},
+          {name: 'Noviembre', y: 2, drilldown: 'data_2015_Noviembre'},
+          {name: 'Diciembre', y: 1, drilldown: 'data_2015_Diciembre'}
+        ]
+      },
+      {
+        id: 'data_2016',
+        data: [
+          {name: 'Enero', y: 4, drilldown: 'data_2016_Enero'},
+          {name: 'Febrero', y: 2, drilldown: 'data_2016_Febrero'},
+          {name: 'Marzo', y: 1, drilldown: 'data_2016_Marzo'},
+          {name: 'Abril', y: 2, drilldown: 'data_2016_Abril'},
+          {name: 'Mayo', y: 1, drilldown: 'data_2016_Mayo'},
+          {name: 'Junio', y: 4, drilldown: 'data_2016_Junio'},
+          {name: 'Julio', y: 2, drilldown: 'data_2016_Julio'},
+          {name: 'Agosto', y: 1, drilldown: 'data_2016_Agosto'},
+          {name: 'Septiembre', y: 2, drilldown: 'data_2016_Septiembre'},
+          {name: 'Octubre', y: 1, drilldown: 'data_2016_Octubre'},
+          {name: 'Noviembre', y: 2, drilldown: 'data_2016_Noviembre'},
+          {name: 'Diciembre', y: 1, drilldown: 'data_2016_Diciembre'}
+        ]
+      }]
+    }
+  });
+});
+</script>

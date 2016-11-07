@@ -24,41 +24,10 @@ $(document).ready(function(){
   var business_data = JSON.parse(localStorage.getItem("business_data"));
   $('#calendar').fullCalendar({
     dayClick: function(date, jsEvent, view) {
-      var day = date.format().split('-');
-      //console.log(day);
-      var current_day = new Date(parseInt(day[0]), parseInt(day[1])-1, (parseInt(day[2])+1));
-      var last_day = new Date(parseInt(day[0]), parseInt(day[1])-1, parseInt(day[2]));
-      $('#table_reservations_place tbody').html('');
-      $.when(get_reservations_day(business_data._id, current_day, last_day)).done(function(json){
-        //console.log(json);
-        if(json.success){
-          $.each(json.reservations,function(index,value){
-            var date = new Date(value.date_reservation);
-            var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
-            var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
-            var var_append="";
-            var_append+='<tr data-id_reservation="'+value._id+'">'+
-                '<td data-id="'+value.place._id+'">'+value.user_responsible.name+" "+value.user_responsible.last_name_p+" "+value.user_responsible.last_name_m+'</td>'+
-                '<td>'+value.no_people+'</td>'+
-                '<td>'+time_reservation+'</td>'+
-                '<td>'+date_reservation+'</td>'+
-                '</tr>';
-            $('#table_reservations_place tbody').append(var_append);
-          });
-          if(json.reservations.length!=0){
-            Materialize.toast(json.msg, 3000, 'rounded green accent-4');
-          }
-        }else{
-          Materialize.toast(json.msg, 5000, 'rounded red accent-2');
-        }
-      });
+      load_table_reservations(date, jsEvent, view, 'day');
     },
-    eventClick: function(calEvent, jsEvent, view) {
-    //  console.log(calEvent);
-    //  console.log('Event: ' + calEvent.title);
-    //  console.log('View: ' + view.name);
-      // change the border color just for fun
-      //$(this).css('border-color', 'blue');
+    eventClick: function(date, jsEvent, view) {
+      load_table_reservations(date, jsEvent, view, 'event');
     },
     locale: "es",
     header: {
@@ -99,13 +68,14 @@ $(document).ready(function(){
               $('#table_reservations_place tbody').append(var_append);
             });
             var dia = index.split('/');
-            events.push({
-                title: count,
-                start: new Date(dia[0],dia[1],dia[2]), // will be parsed
-                //end: value.date_reservation,
-                //Duration: { days: 1 },
-                allDay: true
-            });
+            var event = {
+              title: count,
+              start: new Date(dia[0],dia[1],dia[2]), // will be parsed
+              //end: value.date_reservation,
+              //Duration: { days: 1 },
+              allDay: true
+            };
+            events.push(event);
           });
           if(json.reservations.length!=0){
             Materialize.toast(json.msg, 3000, 'rounded green accent-4');
@@ -139,5 +109,41 @@ function get_reservations_day(place, current_day, last_day){
   });
 }
 
+function load_table_reservations(date, jsEvent, view, were){
+  var day
+  if(were=="day"){
+    day = date.format().split('-');
+  }else{
+    day = date.start.format().split('-');
+  }
+  var business_data = JSON.parse(localStorage.getItem("business_data"));
+  //console.log(day);
+  var current_day = new Date(parseInt(day[0]), parseInt(day[1])-1, (parseInt(day[2])+1));
+  var last_day = new Date(parseInt(day[0]), parseInt(day[1])-1, parseInt(day[2]));
+  $('#table_reservations_place tbody').html('');
+  $.when(get_reservations_day(business_data._id, current_day, last_day)).done(function(json){
+    //console.log(json);
+    if(json.success){
+      $.each(json.reservations,function(index,value){
+        var date = new Date(value.date_reservation);
+        var date_reservation = (date.getFullYear()+"/"+ ("0"+(date.getMonth()+1)).slice(-2) +"/"+ ("0" + date.getDate()).slice(-2));
+        var time_reservation = (("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2));
+        var var_append="";
+        var_append+='<tr data-id_reservation="'+value._id+'">'+
+            '<td data-id="'+value.place._id+'">'+value.user_responsible.name+" "+value.user_responsible.last_name_p+" "+value.user_responsible.last_name_m+'</td>'+
+            '<td>'+value.no_people+'</td>'+
+            '<td>'+time_reservation+'</td>'+
+            '<td>'+date_reservation+'</td>'+
+            '</tr>';
+        $('#table_reservations_place tbody').append(var_append);
+      });
+      if(json.reservations.length!=0){
+        Materialize.toast(json.msg, 3000, 'rounded green accent-4');
+      }
+    }else{
+      Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+    }
+  });
+}
 
 </script>

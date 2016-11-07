@@ -11,8 +11,8 @@
   <link rel='stylesheet' href='css/fullcalendar.min.css' />
   <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 	<link type="text/css" rel="stylesheet" href="css/materialize.clockpicker.css"  media="screen,projection"/>
-
-
+  <!--<link rel="stylesheet" href="css/highcharts.css" media="screen" title="no title">-->
+  <link rel="stylesheet" href="css/app.css" media="screen" title="no title">
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -25,21 +25,21 @@
   <ul id="slide-out" class="side-nav">
     <li>
       <div class="userView grey darken-3">
-        <a href="#!user"><i class="medium material-icons">account_circle</i></a>
+        <a href="#!user"><i class="medium material-icons pink-text">account_circle</i></a>
         <a href="#!name"><span class="white-text name"></span></a>
         <a href="#!email"><span class="white-text email"></span></a>
       </div>
     </li>
-    <li><a class="link_content" data-href="business_profile.html"><i class="material-icons">account_circle</i>Ver perfil</a></li>
-    <li><a class="link_content" data-href="place_profile.html"><i class="material-icons">store</i>Ver perfil negocio</a></li>
-    <li><a class="link_content" data-href="place_historial.html"><i class="material-icons">event</i>Reservaciones</a></li>
+    <li><a class="link_content" data-href="business_profile.html"><i class="material-icons grey-text text-darken-4">account_circle</i>Ver perfil</a></li>
+    <li><a class="link_content" data-href="place_profile.html"><i class="material-icons grey-text text-darken-4">store</i>Ver perfil negocio</a></li>
+    <li><a class="link_content" data-href="place_historial.html"><i class="material-icons grey-text text-darken-4">event</i>Reservaciones</a></li>
     <li><a class="subheader">Toma de decisiones</a></li>
-    <li><a class="link_content"><i class="material-icons">show_chart</i>Dashboard</a></li>
-    <li><a class="waves-effect" id="btn_log_out"><i class="material-icons">exit_to_app</i> Cerrar sesión</a></li>
+    <li><a class="link_content" data-href="dashboard.html"><i class="material-icons grey-text text-darken-4">show_chart</i>Dashboard</a></li>
+    <li><a class="waves-effect" id="btn_log_out"><i class="material-icons grey-text text-darken-4">exit_to_app</i> Cerrar sesión</a></li>
   </ul>
   <div class="navbar-fixed">
     <nav>
-      <div class="nav-wrapper">
+      <div class="nav-wrapper blue lighten-1">
         <div class="row">
           <div class="col offset-s1 s10">
             <a href="#" data-activates="slide-out" id="btn_collapse_menu"><i class="material-icons">menu</i></a>
@@ -63,7 +63,12 @@
   <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
   <script src='js/moment.min.js'></script>
   <script src='js/fullcalendar.min.js'></script>
+  <script type="text/javascript" src="js/highcharts.js"></script>
+  <script type="text/javascript" src="js/drilldown.js"></script>
+  <script type="text/javascript" src="js/highcharts-more.js"></script>
+  <script type="text/javascript" src="js/dark-unica.js"></script>
   <script src='js/locale-all.js'></script>
+  <script type="text/javascript" src="js/socket.io-1.4.5.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/business_index.js"></script>
 </body>

@@ -1,0 +1,14 @@
+.fc-event {
+  position: relative; /* for resize handle and other inner positioning */
+  display: block; /* make the <a> tag block */
+  font-size: .85em;
+  line-height: 3.3;
+  border: 1px solid #e91e63; /* default BORDER color */
+  font-weight: normal; /* undo jqui's ui-widget-header bold */
+  background-color: #e91e63; /* default BACKGROUND color */
+  width: 40px;
+  border-radius: 50%;
+  height: 40px;
+  text-align: center;
+  margin: auto auto;
+}

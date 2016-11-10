@@ -92,15 +92,6 @@ $(document).ready(function(){
     },
   });
 });
-function get_reservations_month(place, current_month, last_month){
-  return $.ajax({
-    url: "http://localhost:3000/reservations/place/month",
-    method: "POST",
-    data: {
-      place: place, current_month: current_month, last_month: last_month
-    }
-  });
-}
 function get_reservations_day(place, current_day, last_day){
   return $.ajax({
     url: "http://localhost:3000/reservations/place/day",

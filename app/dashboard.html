@@ -4,15 +4,13 @@
   <div class="row">
     <div class="col s12 offset-m1 m5">
       <div class="card-panel pink valign-wrapper">
-        <span class="white-text valign">
-          28 Reservaciones este mes
+        <span class="white-text valign" id="indicator_reservations">
         </span>
       </div>
     </div>
     <div class="col s12 m5">
       <div class="card-panel pink valign-wrapper">
-        <span class="white-text valign">
-          4 Personas por reservación
+        <span class="white-text valign" id="indicator_people_reservation">
         </span>
       </div>
     </div>
@@ -28,7 +26,8 @@
       <div class="chart_div" id="chart_chart_realtime" style="width: 100%;"></div>
     </div>
     <div id="chart_per_hour" class="col s12" style="width: 100%;">
-      <div class="chart_div" id="chart_chart_per_hour"></div>
+      <div class="chart_div" id="chart_chart_per_hour_1"></div>
+      <div class="chart_div" id="chart_chart_per_hour_2"></div>
     </div>
   </div>
   <h4><i class="material-icons">timelapse</i> Indicadores históricos</h4>
@@ -36,7 +35,7 @@
     <div class="col s12">
       <ul id="tabs_historic" class="tabs">
         <li class="tab"><a class="pink-text text-accent-2 active" href="#chart_tendency">Tendencia de reservaciones por mes</a></li>
-        <li class="tab"><a class="pink-text text-accent-2" href="#chart_drill">Reservaciones por dias y horas</a></li>
+        <li class="tab"><a class="pink-text text-accent-2" href="#chart_drill">Reservaciones por años y meses</a></li>
       </ul>
     </div>
     <div id="chart_tendency" class="col s12">
@@ -50,53 +49,99 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+  var user_data = JSON.parse(localStorage.getItem("user_data"));
+  var business_data = JSON.parse(localStorage.getItem("business_data"));
+
+  $.when(get_reservations_hours(business_data)).done(function(json){
+    if(json.success){
+      load_charts_hours(json.hours);
+    }else{
+      Materialize.toast(json.msg, 5000, 'rounded red accent-2');
+    }
+  });
+
   $('#tabs_indicators .tab a').click(function(){
-    var chart = $($(this).attr('href')).find('.chart_div').first();
-    setTimeout(function () {
-      $(chart).highcharts().reflow();
-    }, 10);
+    $($(this).attr('href')).find('.chart_div').each(function(index, value){
+      setTimeout(function () {
+        $(value).highcharts().reflow();
+      }, 10);
+    });
+
   });
   $('#tabs_indicators').tabs();
 
   $('#tabs_historic .tab a').click(function(){
-    var chart = $($(this).attr('href')).find('.chart_div').first();
-    setTimeout(function () {
-      $(chart).highcharts().reflow();
-    }, 10);
+    $($(this).attr('href')).find('.chart_div').each(function(index, value){
+      setTimeout(function () {
+        $(value).highcharts().reflow();
+      }, 10);
+    });
   });
   $('#tabs_historic').tabs();
 
+  update_indicators();
+
   $('#chart_chart_tendency').highcharts({
-    xAxis: {
-      min: -0.5,
-      max: 5.5
-    },
-    yAxis: {
-      min: 0
+    chart: {
+      type: 'scatter'
     },
     title: {
       text: 'Tendencia de reservaciones por mes'
     },
-    series: [{
-      type: 'line',
-      name: 'Regression Line',
-      data: [[0, 1.11], [5, 4.51]],
-      marker: {
-        enabled: false
-      },
-      states: {
-        hover: {
-          lineWidth: 0
-        }
-      },
-      enableMouseTracking: false
-    }, {
-      type: 'scatter',
-      name: 'Observations',
-      data: [1, 1.5, 2.8, 3.5, 3.9, 4.2],
-      marker: {
-        radius: 4
+    yAxis: {
+      title: {
+        text: 'Reservaciones'
       }
+    },
+    xAxis: {
+      title: {
+        enabled: true,
+        text: 'Meses'
+      },
+      startOnTick: true,
+      endOnTick: true,
+      showLastLabel: true,
+      categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    },
+    plotOptions: {
+      scatter: {
+        marker: {
+          radius: 5,
+          states: {
+            hover: {
+              enabled: true,
+              lineColor: 'rgb(100,100,100)'
+            }
+          }
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.category} , {point.y} reservaciones'
+        }
+      }
+    },
+    series: [{
+      regression: true,
+
+      regressionSettings: {
+        type: 'linear',
+        color:  'rgba(223, 255, 83, .9)'
+      },
+      name: 'Reservaciones',
+      color: 'rgba(223, 83, 83, .5)',
+      data: [
+        [2], [2], [7], [2], [2],
+        [2], [2], [2], [8], [12],
+        [111], [12], [2]
+      ]
     }]
   });
 
@@ -135,56 +180,6 @@ $(document).ready(function(){
     }]
   });
 
-  $('#chart_chart_per_hour').highcharts({
-
-    chart: {
-      polar: true
-    },
-
-    title: {
-      text: 'Distribución de reservaciones por hora'
-    },
-
-    pane: {
-      startAngle: 0,
-      endAngle: 360
-    },
-
-    xAxis: {
-      tickInterval: 1,
-      min: 0,
-      max: 12,
-      labels: {
-        formatter: function () {
-          return this.value + ':00';
-        }
-      }
-    },
-
-    yAxis: {
-      min: 0
-    },
-
-    plotOptions: {
-      series: {
-        pointStart: 0,
-        pointInterval: 1
-      }
-    },
-
-    series: [
-      {
-        type: 'line',
-        name: 'Highlines de reservaciones',
-        data: [1, 2, 3, 4, 5, 6, 17, 8]
-      },
-      {
-        type: 'area',
-        name: 'Concentrado de reservaciones',
-        data: [1, 8, 2, 7, 3, 6, 4, 5]
-      }
-    ]
-  });
   $('#chart_chart_drill').highcharts({
     chart: {
       type: 'column'
@@ -282,4 +277,115 @@ $(document).ready(function(){
     }
   });
 });
+
+function get_reservations_hours(business_data) {
+  return $.ajax({
+    url: "http://localhost:3000/reservations/user/hours",
+    method: "POST",
+    data: {
+      place: business_data._id
+    }
+  });
+}
+
+function load_charts_hours(data){
+  //console.log(data);
+  var chida = [];
+  for (var i = 0; i < 24; i++) {
+    chida.push({x: i, y: 0});
+  };
+
+  $.each(data,function(index, value){
+    chida[index] = {
+      x: parseInt(index),
+      y: value.length
+    }
+  });
+  var chida_2 = chida;
+  var chida_1 = chida.splice(0,11);
+
+  $('#chart_chart_per_hour_1').highcharts({
+    chart: {
+      polar: true
+    },
+
+    title: {
+      text: 'Distribución de reservaciones por hora 0-12 horas'
+    },
+    pane: {
+      startAngle: 0,
+      endAngle: 360
+    },
+
+    xAxis: {
+      min: 0,
+      max: 11,
+      tickInterval: 1,
+      labels: {
+        formatter: function () {
+          return this.value + ':00';
+        }
+      }
+    },
+    yAxis: {
+      min: 1
+    },
+    plotOptions: {
+      series: {
+        pointStart: 0,
+        pointInterval: 1
+      }
+    },
+
+    series: [
+      {
+        type: 'scatter',
+        name: 'Highlines de reservaciones',
+        data: chida_1
+      }
+    ]
+  });
+
+  $('#chart_chart_per_hour_2').highcharts({
+    chart: {
+      polar: true
+    },
+
+    title: {
+      text: 'Distribución de reservaciones por hora 13-24 horas'
+    },
+    pane: {
+      startAngle: 0,
+      endAngle: 360
+    },
+    xAxis: {
+      min: 12,
+      max: 23,
+      tickInterval: 1,
+      labels: {
+        formatter: function () {
+          return this.value + ':00';
+        }
+      }
+    },
+    yAxis: {
+      min: 1
+    },
+
+    plotOptions: {
+      series: {
+        pointStart: 0,
+        pointInterval: 1
+      }
+    },
+
+    series: [
+      {
+        type: 'scatter',
+        name: 'Highlines de reservaciones',
+        data: chida_2
+      }
+    ]
+  });
+}
 </script>

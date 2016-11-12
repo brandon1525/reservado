@@ -17,7 +17,7 @@ $(document).ready(function(){
   });
 
 
-  var socket = io.connect('https://192.168.56.100:443',{'name': business_data._id});
+  var socket = io.connect('https://192.168.56.100:8080',{'name': business_data._id});
   socket.emit('Administrador_conectado', business_data._id);
 
   socket.on('notification_reservation', function(data){

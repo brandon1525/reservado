@@ -280,7 +280,7 @@ $(document).ready(function(){
 
 function get_reservations_hours(business_data) {
   return $.ajax({
-    url: "http://localhost:3000/reservations/user/hours",
+    url: "https://192.168.56.100:3000/reservations/user/hours",
     method: "POST",
     data: {
       place: business_data._id

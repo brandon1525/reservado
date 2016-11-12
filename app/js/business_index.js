@@ -33,13 +33,13 @@ $(document).ready(function(){
 });
 function status_payment(business_data) {
   return $.ajax({
-    url: "http://localhost:3000/place/"+business_data._id+"/status_payment",
+    url: "https://192.168.56.100:3000/place/"+business_data._id+"/status_payment",
     method: "GET"
   });
 }
 function get_reservations_month(place, current_month, last_month){
   return $.ajax({
-    url: "http://localhost:3000/reservations/place/month",
+    url: "https://192.168.56.100:3000/reservations/place/month",
     method: "POST",
     data: {
       place: place, current_month: current_month, last_month: last_month

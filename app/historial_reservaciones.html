@@ -54,7 +54,7 @@ $(document).on('click','.btn_cancel_reservation',function(){
 
 function get_historial(user_responsible){
   return $.ajax({
-    url: "https://192.168.56.100:3000/reservations/user",
+    url: "httos://192.168.57.100:3000/reservations/user",
     method: "POST",
     data: {
       user_responsible: user_responsible
@@ -63,7 +63,7 @@ function get_historial(user_responsible){
 }
 function cancel_reservation(user_id, reservation){
   return $.ajax({
-    url: "https://192.168.56.100:3000/reservation/cancel",
+    url: "httos://192.168.57.100:3000/reservation/cancel",
     method: "POST",
     data: {
       user_id: user_id, id_reservation: reservation

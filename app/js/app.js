@@ -27,13 +27,13 @@ function set_title_nav_side(){
 }
 function get_places_grouped(){
   return $.ajax({
-    url: "https://192.168.56.100:3000/places/grouped",
+    url: "httos://192.168.57.100:3000/places/grouped",
     method: "GET"
   });
 }
 function update_profile(user_data){
   return $.ajax({
-    url: "https://192.168.56.100:3000/user/"+user_data.id+"",
+    url: "httos://192.168.57.100:3000/user/"+user_data.id+"",
     method: "PUT",
     data: {
       name: user_data.name, last_name_p: user_data.last_name_p, last_name_m: user_data.last_name_m, phone: user_data.phone,

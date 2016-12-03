@@ -129,7 +129,7 @@ function load_business_select() {
 }
 function create_reservation(user_responsible, place, date_reservation, no_people) {
   return $.ajax({
-    url: "httos://192.168.57.100:3000/reservation",
+    url: "https://192.168.57.100:3000/reservation",
     method: "POST",
     data: {
       user_responsible: user_responsible, place: place, date_reservation: date_reservation, no_people: no_people

@@ -17,7 +17,7 @@ $(document).ready(function(){
   });
 
 
-  var socket = io.connect('httos://192.168.57.100:4433',{'name': business_data._id});
+  var socket = io.connect('https://192.168.57.100:4433',{'name': business_data._id});
   socket.emit('Administrador_conectado', business_data._id);
 
   socket.on('notification_reservation', function(data){
@@ -33,13 +33,13 @@ $(document).ready(function(){
 });
 function status_payment(business_data) {
   return $.ajax({
-    url: "httos://192.168.57.100:3000/place/"+business_data._id+"/status_payment",
+    url: "https://192.168.57.100:3000/place/"+business_data._id+"/status_payment",
     method: "GET"
   });
 }
 function get_reservations_month(place, current_month, last_month){
   return $.ajax({
-    url: "httos://192.168.57.100:3000/reservations/place/month",
+    url: "https://192.168.57.100:3000/reservations/place/month",
     method: "POST",
     data: {
       place: place, current_month: current_month, last_month: last_month

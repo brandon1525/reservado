@@ -208,7 +208,7 @@
 		var day = parseInt(date_b[0]);
 		date_b = new Date(year, month, day, 0, 0, 0, 0);
 		return $.ajax({
-			url: "httos://192.168.57.100:3000/user",
+			url: "https://192.168.57.100:3000/user",
 			method: "POST",
 			data: {
 				name: name, last_name_p: last_name_p, last_name_m: last_name_m, phone: phone,

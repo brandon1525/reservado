@@ -94,7 +94,7 @@ $(document).ready(function(){
 });
 function get_reservations_day(place, current_day, last_day){
   return $.ajax({
-    url: "httos://192.168.57.100:3000/reservations/place/day",
+    url: "https://192.168.57.100:3000/reservations/place/day",
     method: "POST",
     data: {
       place: place, current_day: current_day, last_day: last_day

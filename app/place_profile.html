@@ -371,7 +371,7 @@ function load_info_place(){
 
 function update_place(business_data){
   return $.ajax({
-    url: "httos://192.168.57.100:3000/place/"+business_data._id+"",
+    url: "https://192.168.57.100:3000/place/"+business_data._id+"",
     method: "PUT",
     data: {
       name: business_data.name, description: business_data.description, total_people: business_data.total_people,

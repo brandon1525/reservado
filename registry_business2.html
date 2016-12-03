@@ -238,7 +238,7 @@
 	}
 	function registry_business2(name, description, total_people, type, owner, type_plan, number_card, cvv, date){
 		return $.ajax({
-			url: "httos://192.168.57.100:3000/place",
+			url: "https://192.168.57.100:3000/place",
 			method: "POST",
 			data: {
 				name: name, description: description, total_people: total_people, type: type, owner: owner,
